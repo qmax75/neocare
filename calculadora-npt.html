@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d3442">
+  <meta name="description" content="Calculadora de Nutrición Parenteral Total (NPT) para neonatología.">
+  <title>Nutrición Parenteral (NPT) | NeoCare</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .npt-page{padding:30px 0 70px;background:#f7faf9;min-height:calc(100vh - 82px)}
+    .back-link{display:inline-block;color:var(--teal-dark);font-size:12px;font-weight:600;margin-bottom:22px}
+    .npt-intro{margin-bottom:26px}
+    .npt-intro h1{font:800 clamp(28px,4vw,40px)/1.15 "Manrope",sans-serif;color:#143c49;letter-spacing:-1.4px;margin:10px 0 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .npt-intro h1 span{background:var(--teal);color:white;font-size:0.85rem;padding:3px 12px;border-radius:20px;font-weight:600;letter-spacing:0}
+    .npt-intro p{font-size:13px;color:#6e858d;max-width:640px;margin:0}
+
+    .npt-actions{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+    .npt-btn{background:#fff;border:1px solid var(--line);color:var(--teal-dark);padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+    .npt-btn:hover{background:var(--soft);border-color:var(--teal)}
+    .npt-btn-primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+    .npt-btn-primary:hover{background:var(--teal-dark);color:#fff}
+
+    .npt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;align-items:start}
+    .npt-card{background:#fff;border:1px solid #e5eded;border-radius:14px;padding:20px 22px;box-shadow:0 4px 15px rgba(0,0,0,0.02)}
+    .npt-card h2{margin:0 0 16px;font:700 13px "Manrope",sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--teal-dark);border-bottom:1px solid var(--line);padding-bottom:10px}
+
+    .npt-field{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .npt-field label{flex:1;font-size:13px;color:#4a6068;font-weight:500}
+    .npt-field input{width:100px;padding:9px 12px;border:1px solid #dfe9e8;border-radius:8px;font-size:14px;text-align:right;font-family:inherit;font-variant-numeric:tabular-nums;background:#fafcff;color:var(--ink);transition:all .15s}
+    .npt-field input:focus{outline:none;border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(21,158,155,.15)}
+    .npt-field .unit{width:75px;font-size:11px;color:#8a9da1;font-weight:500}
+
+    .npt-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px dashed #e8eef5;font-size:13px}
+    .npt-row:last-child{border-bottom:none}
+    .npt-row .lbl{color:#587076}
+    .npt-row .val{font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+    .npt-row.hi{background:linear-gradient(90deg,rgba(21,158,155,.06),transparent);border-radius:6px;padding-left:8px;padding-right:8px}
+    .npt-row.hi .val{color:var(--teal-dark)}
+
+    .npt-note{font-size:12px;line-height:1.5;padding:12px 14px;border-radius:8px;margin-bottom:10px;border-left:4px solid var(--line);background:var(--soft);color:#4a6068}
+    .npt-note.ok{border-left-color:#278b67;background:#f0faf3;color:#14532d}
+    .npt-note.warn{border-left-color:#d9a14b;background:#fff8ec;color:#7c3a04}
+    .npt-note.bad{border-left-color:#c0392b;background:#fdf0f2;color:#7f1020}
+    .npt-note strong{color:inherit}
+
+    .npt-legend{font-size:11px;color:#8a9da1;margin-top:16px;line-height:1.6;border-top:1px solid var(--line);padding-top:14px}
+
+    @media print{
+      .site-header,.back-link,.npt-actions,.npt-disclaimer,.skip-link{display:none !important}
+      body{background:#fff;padding:0}
+      .npt-page{padding:0;background:#fff;min-height:auto}
+      .npt-card{box-shadow:none;border:1px solid #ccc;break-inside:avoid;margin-bottom:15px}
+      .npt-grid{grid-template-columns:1fr;gap:15px}
+    }
+    @media(max-width:480px){
+      .npt-card{padding:16px}
+      .npt-field input{width:80px}
+      .npt-field .unit{width:65px}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="NeoCare, inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 5.5c-10.2 0-18.5 8.3-18.5 18.5S13.8 42.5 24 42.5 42.5 34.2 42.5 24 34.2 5.5 24 5.5Z" stroke="currentColor" stroke-width="2.2"/><path d="M24 13v22M13 24h22" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><circle cx="24" cy="24" r="4.5" fill="#20B6AE"/></svg>
+        </span>
+        <span class="brand-copy"><strong>NeoCare</strong><small>NEONATAL DIGITAL HEALTH</small></span>
+      </a>
+      <a class="header-cta" href="index.html#herramientas">← Volver al catálogo</a>
+    </div>
+  </header>
+
+  <main id="main" class="npt-page">
+    <div class="container">
+      <a href="index.html#herramientas" class="back-link">← Volver al catálogo</a>
+      
+      <div class="npt-intro">
+        <h1>🥣 Nutrición Parenteral <span>NPT</span></h1>
+        <p>Ingrese los parámetros para calcular macronutrientes, osmolaridad y relaciones calóricas. Los resultados se actualizan automáticamente.</p>
+      </div>
+
+      <div class="npt-actions">
+        <button id="btnReset" class="npt-btn" type="button">🔄 Restablecer ejemplo</button>
+        <button id="btnPrint" class="npt-btn npt-btn-primary" type="button">🖨️ Imprimir receta</button>
+      </div>
+
+      <div class="npt-grid">
+        <!-- ENTRADA DE DATOS -->
+        <section class="npt-card">
+          <h2>Ingrese datos</h2>
+          <div class="npt-field">
+            <label for="peso">Peso</label>
+            <input id="peso" type="number" step="0.01" value="0.9">
+            <span class="unit">kg</span>
+          </div>
+          <div class="npt-field">
+            <label for="aporte">Aporte</label>
+            <input id="aporte" type="number" step="0.1" value="60">
+            <span class="unit">ml/k/día</span>
+          </div>
+          <div class="npt-field">
+            <label for="flujo">Flujo (GIR)</label>
+            <input id="flujo" type="number" step="0.1" value="6">
+            <span class="unit">mg/k/min</span>
+          </div>
+          <div class="npt-field">
+            <label for="aa">Aminoácidos</label>
+            <input id="aa" type="number" step="0.1" value="3">
+            <span class="unit">gr/k/d</span>
+          </div>
+          <div class="npt-field">
+            <label for="lip">Lípidos</label>
+            <input id="lip" type="number" step="0.1" value="2">
+            <span class="unit">gr/k/d</span>
+          </div>
+          <div class="npt-field">
+            <label for="na">Ap Na⁺</label>
+            <input id="na" type="number" step="0.1" value="3">
+            <span class="unit">mEq/k/día</span>
+          </div>
+          <div class="npt-legend">
+            Factores usados: proteínas 4 kcal/g · lípidos 10 kcal/g · glucosa 3.4 kcal/g · 1 g proteína = 160 mg N (6.25 g prot/g N).
+          </div>
+        </section>
+
+        <!-- RESULTADOS -->
+        <section class="npt-card">
+          <h2>Resultados</h2>
+          <div class="npt-row hi"><span class="lbl">cal/k/día</span><span class="val" id="o_calKgDia">–</span></div>
+          <div class="npt-row"><span class="lbl">cal no pr / gr prot</span><span class="val" id="o_calNoPrGrProt">–</span></div>
+          <div class="npt-row"><span class="lbl">cal no pr / gr N</span><span class="val" id="o_calNoPrGrN">–</span></div>
+          <div class="npt-row"><span class="lbl">% cal H de C</span><span class="val" id="o_pcHC">–</span></div>
+          <div class="npt-row"><span class="lbl">% cal prot</span><span class="val" id="o_pcProt">–</span></div>
+          <div class="npt-row"><span class="lbl">% cal líp</span><span class="val" id="o_pcLip">–</span></div>
+          <div class="npt-row"><span class="lbl">conc gluc</span><span class="val" id="o_concGluc">–</span></div>
+          <div class="npt-row"><span class="lbl">ml/hora</span><span class="val" id="o_mlHora">–</span></div>
+          <div class="npt-row hi"><span class="lbl">osmol</span><span class="val" id="o_osmol">–</span></div>
+          <div class="npt-row"><span class="lbl">% cal lip / cal no pr</span><span class="val" id="o_pctLipNoProt">–</span></div>
+          <div class="npt-row"><span class="lbl">% cal H de C / cal no pr</span><span class="val" id="o_pctHCNoProt">–</span></div>
+        </section>
+
+        <!-- CÁLCULO FINAL -->
+        <section class="npt-card">
+          <h2>Cálculo final</h2>
+          <div class="npt-row"><span class="lbl">Volumen</span><span class="val" id="o_volumen">–</span></div>
+          <div class="npt-row"><span class="lbl">Prot</span><span class="val" id="o_protDia">–</span></div>
+          <div class="npt-row"><span class="lbl">conc prot</span><span class="val" id="o_concProt">–</span></div>
+          <div class="npt-row"><span class="lbl">conc gluc</span><span class="val" id="o_concGluc2">–</span></div>
+          <div class="npt-row"><span class="lbl">Lípidos</span><span class="val" id="o_lipDia">–</span></div>
+          <div class="npt-row hi"><span class="lbl">cal/día</span><span class="val" id="o_calTotal">–</span></div>
+          <div class="npt-row"><span class="lbl">cal no prot/día</span><span class="val" id="o_calNoProt">–</span></div>
+          <div class="npt-row"><span class="lbl">Na⁺ total</span><span class="val" id="o_naTotal">–</span></div>
+          <div class="npt-row"><span class="lbl">conc Na⁺</span><span class="val" id="o_concNa">–</span></div>
+          <div class="npt-row"><span class="lbl">conc Na⁺ %</span><span class="val" id="o_concNaPct">–</span></div>
+          <div class="npt-row"><span class="lbl">cal lípidos</span><span class="val" id="o_calLip">–</span></div>
+          <div class="npt-row"><span class="lbl">% cal lip / cal no pr</span><span class="val" id="o_pctLipNoProt2">–</span></div>
+          <div class="npt-row"><span class="lbl">cal H de C</span><span class="val" id="o_calHC">–</span></div>
+        </section>
+
+        <!-- OBSERVACIONES -->
+        <section class="npt-card">
+          <h2>Observaciones automáticas</h2>
+          <div class="npt-note" id="w_osm">–</div>
+          <div class="npt-note" id="w_lip">–</div>
+          <div class="npt-note" id="w_hc">–</div>
+          <div class="npt-note" id="w_prot">–</div>
+
+          <div class="npt-legend">
+            1 gr de prot = 160 mg de N.<br>
+            Objetivo: 24 – 32 cal no prot / gr N (o 150 – 200 cal no prot / gr N).<br>
+            Las NPT con osmol > 900 mOsm/l deben infundirse por vía EV central.<br>
+            Las calorías lipídicas deben ser no más del 40 % de las calorías no proteicas.<br>
+            Las calorías por H de C deben ser no menos del 60 % de las cal no proteicas.
+          </div>
+        </section>
+      </div>
+
+      <div class="calc-disclaimer npt-disclaimer" style="margin-top:30px;padding:14px 18px;background:#fff;border:1px solid #f0dcb4;border-left:4px solid #d9a14b;border-radius:8px;font-size:11px;line-height:1.65;color:#6b5b30">
+        <strong>Aviso clínico.</strong> Esta herramienta es un recurso de apoyo. No reemplaza el juicio clínico ni la validación farmacéutica. Verifique siempre las osmolaridades, concentraciones y el acceso vascular antes de la administración.
+      </div>
+    </div>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+
+    var KCAL_PROT   = 4;      
+    var KCAL_LIP    = 10;     
+    var KCAL_GLUC   = 3.4;    
+    var PROT_POR_N  = 6.25;   
+    var FACTOR_OSM_GLUC = 5.5;  
+    var FACTOR_OSM_PROT = 10;   
+    var FACTOR_OSM_NA   = 2;    
+    var DIV_NA_PCT      = 170;  
+
+    var $ = function (id) { return document.getElementById(id); };
+
+    function val(id) {
+      var raw = $(id).value;
+      if (raw === "" || raw === null) return 0;
+      var n = parseFloat(String(raw).replace(",", "."));
+      return isFinite(n) ? n : 0;
+    }
+    function f(v, d) {
+      d = (d === undefined) ? 2 : d;
+      if (!isFinite(v)) return "–";
+      return v.toLocaleString("es-ES", {
+        minimumFractionDigits: d, maximumFractionDigits: d
+      });
+    }
+    function safeDiv(a, b) { return b === 0 ? 0 : a / b; }
+
+    function calc() {
+      var peso   = val("peso");
+      var aporte = val("aporte");
+      var flujo  = val("flujo");
+      var aa     = val("aa");
+      var lip    = val("lip");
+      var na     = val("na");
+
+      var volumen = peso * aporte;                       
+      var protDia = peso * aa;                           
+      var lipDia  = peso * lip;                          
+      var naTotal = peso * na;                           
+      var glucDia = flujo * peso * 60 * 24 / 1000;       
+
+      var concProt = safeDiv(protDia * 100, volumen);    
+      var concGluc = safeDiv(glucDia * 100, volumen);    
+      var concNa   = safeDiv(naTotal * 1000, volumen);   
+      var concNaPct = safeDiv(concNa, DIV_NA_PCT);       
+
+      var calProt   = protDia * KCAL_PROT;
+      var calLip    = lipDia  * KCAL_LIP;
+      var calHC     = glucDia * KCAL_GLUC;
+      var calTotal  = calProt + calLip + calHC;
+      var calNoProt = calLip + calHC;
+
+      var calKgDia      = safeDiv(calTotal, peso);
+      var calNoPrGrProt = safeDiv(calNoProt, protDia);
+      var nGramos       = safeDiv(protDia, PROT_POR_N);
+      var calNoPrGrN    = safeDiv(calNoProt, nGramos);
+
+      var pcProt = safeDiv(calProt  * 100, calTotal);
+      var pcLip  = safeDiv(calLip   * 100, calTotal);
+      var pcHC   = safeDiv(calHC    * 100, calTotal);
+
+      var pctLipNoProt = safeDiv(calLip * 100, calNoProt);
+      var pctHCNoProt  = safeDiv(calHC  * 100, calNoProt);
+
+      var mlHora = volumen / 24;
+
+      var glucGL = concGluc * 10;
+      var protGL = concProt * 10;
+      var osmol  = glucGL * FACTOR_OSM_GLUC + protGL * FACTOR_OSM_PROT + concNa * FACTOR_OSM_NA;
+
+      $("o_calKgDia").textContent       = f(calKgDia, 2);
+      $("o_calNoPrGrProt").textContent  = f(calNoPrGrProt, 2);
+      $("o_calNoPrGrN").textContent     = f(calNoPrGrN, 2);
+      $("o_pcHC").textContent           = f(pcHC, 2) + " %";
+      $("o_pcProt").textContent         = f(pcProt, 2) + " %";
+      $("o_pcLip").textContent          = f(pcLip, 2) + " %";
+      $("o_concGluc").textContent       = f(concGluc, 2) + " gr%";
+      $("o_mlHora").textContent         = f(mlHora, 2) + " ml/h";
+      $("o_osmol").textContent          = f(osmol, 0) + " mOsm/l";
+      $("o_pctLipNoProt").textContent   = f(pctLipNoProt, 2) + " %";
+      $("o_pctHCNoProt").textContent    = f(pctHCNoProt, 2) + " %";
+
+      $("o_volumen").textContent   = f(volumen, 2) + " ml/d";
+      $("o_protDia").textContent   = f(protDia, 2) + " gr/día";
+      $("o_concProt").textContent  = f(concProt, 2) + " g/100 ml";
+      $("o_concGluc2").textContent = f(concGluc, 2) + " g/100 ml";
+      $("o_lipDia").textContent    = f(lipDia, 2) + " gr/día";
+      $("o_calTotal").textContent  = f(calTotal, 2) + " cal/día";
+      $("o_calNoProt").textContent = f(calNoProt, 2) + " cal/día";
+      $("o_naTotal").textContent   = f(naTotal, 2) + " mEq";
+      $("o_concNa").textContent    = f(concNa, 2) + " mEq/1000 ml";
+      $("o_concNaPct").textContent = f(concNaPct, 4) + " %";
+      $("o_calLip").textContent    = f(calLip, 2) + " cal";
+      $("o_pctLipNoProt2").textContent = f(pctLipNoProt, 2) + " %";
+      $("o_calHC").textContent     = f(calHC, 2) + " cal";
+
+      var eOsm = $("w_osm");
+      if (volumen <= 0) {
+        eOsm.className = "npt-note";
+        eOsm.innerHTML = "Introduzca peso y aporte para calcular la osmolaridad.";
+      } else if (osmol > 900) {
+        eOsm.className = "npt-note bad";
+        eOsm.innerHTML = "<strong>⚠ Osmolaridad " + f(osmol, 0) +
+          " mOsm/l (&gt; 900):</strong> la NPT debe infundirse por vía <strong>EV central</strong>.";
+      } else {
+        eOsm.className = "npt-note ok";
+        eOsm.innerHTML = "<strong>✓ Osmolaridad " + f(osmol, 0) +
+          " mOsm/l (≤ 900):</strong> puede infundirse por vía periférica.";
+      }
+
+      var eLip = $("w_lip");
+      if (calNoProt <= 0) {
+        eLip.className = "npt-note";
+        eLip.innerHTML = "Sin calorías no proteicas para evaluar el aporte lipídico.";
+      } else if (pctLipNoProt > 40) {
+        eLip.className = "npt-note bad";
+        eLip.innerHTML = "<strong>⚠ Lípidos " + f(pctLipNoProt, 2) +
+          " % de las cal no proteicas:</strong> supera el límite recomendado del 40 %.";
+      } else {
+        eLip.className = "npt-note ok";
+        eLip.innerHTML = "<strong>✓ Lípidos " + f(pctLipNoProt, 2) +
+          " % de las cal no proteicas:</strong> dentro del límite (≤ 40 %).";
+      }
+
+      var eHC = $("w_hc");
+      if (calNoProt <= 0) {
+        eHC.className = "npt-note";
+        eHC.innerHTML = "Sin calorías no proteicas para evaluar el aporte de hidratos de carbono.";
+      } else if (pctHCNoProt < 60) {
+        eHC.className = "npt-note bad";
+        eHC.innerHTML = "<strong>⚠ H de C " + f(pctHCNoProt, 2) +
+          " % de las cal no proteicas:</strong> por debajo del mínimo recomendado del 60 %.";
+      } else {
+        eHC.className = "npt-note ok";
+        eHC.innerHTML = "<strong>✓ H de C " + f(pctHCNoProt, 2) +
+          " % de las cal no proteicas:</strong> cumple el mínimo (≥ 60 %).";
+      }
+
+      var eProt = $("w_prot");
+      if (nGramos <= 0) {
+        eProt.className = "npt-note";
+        eProt.innerHTML = "Introduzca el aporte de aminoácidos para evaluar la relación cal no prot / gr N.";
+      } else if (calNoPrGrN < 150) {
+        eProt.className = "npt-note warn";
+        eProt.innerHTML = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
+          ":</strong> por debajo del objetivo habitual (150 – 200).";
+      } else if (calNoPrGrN > 200) {
+        eProt.className = "npt-note warn";
+        eProt.innerHTML = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
+          ":</strong> por encima del objetivo habitual (150 – 200).";
+      } else {
+        eProt.className = "npt-note ok";
+        eProt.innerHTML = "<strong>✓ cal no prot / gr N = " + f(calNoPrGrN, 2) +
+          ":</strong> dentro del objetivo (150 – 200).";
+      }
+    }
+
+    var ids = ["peso", "aporte", "flujo", "aa", "lip", "na"];
+    ids.forEach(function (id) {
+      $(id).addEventListener("input", calc);
+      $(id).addEventListener("change", calc);
+    });
+
+    $("btnReset").addEventListener("click", function () {
+      var defaults = { peso: "0.9", aporte: "60", flujo: "6", aa: "3", lip: "2", na: "3" };
+      Object.keys(defaults).forEach(function (k) { $(k).value = defaults[k]; });
+      calc();
+    });
+
+    $("btnPrint").addEventListener("click", function () { window.print(); });
+
+    calc();
+  })();
+  </script>
+</body>
+</html>
