@@ -18,9 +18,13 @@ Portal web estático para centralizar aplicaciones, utilidades y recursos digita
 | Herramienta | Estado | Ruta |
 |---|---|---|
 | **Calculadoras de infusiones** | Disponible | `calculadoras-infusion.html` |
+| **Nutrición Parenteral (NPT)** | Disponible | `calculadora-npt.html` |
+| **NeoClinical** | Disponible | `neo-clinical.html` |
 | Resto del catálogo | En desarrollo | — |
 
 Las calculadoras de infusiones incluyen 20 fármacos y soluciones (adrenalina, diamorfina, dinoprostona, dobutamina, dopamina, doxapram, electrolitos, epoprostenol, estreptoquinasa, fentanilo, heparina, insulina, isoprenalina, lidocaína, midazolam, morfina, nitroprusiato, noradrenalina, ranitidina, tolazolina). Las fórmulas y concentraciones están basadas en NeoWeb Infusions. **Verificar la presentación comercial disponible en cada centro antes de su uso clínico.**
+
+El catálogo informa automáticamente la cantidad real de herramientas y conserva búsqueda, filtros y favoritos locales.
 
 ## Estructura
 
