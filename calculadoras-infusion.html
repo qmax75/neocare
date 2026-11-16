@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d3442">
+  <meta name="description" content="Calculadoras de preparación y dosificación de infusiones continuas en neonatología.">
+  <title>Calculadoras de infusiones | NeoCare</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .calc-page{padding:30px 0 70px;background:#f7faf9;min-height:calc(100vh - 82px)}
+    .back-link{display:inline-block;color:var(--teal-dark);font-size:12px;font-weight:600;margin-bottom:22px}
+    .calc-intro{margin-bottom:26px}
+    .calc-intro h1{font:800 clamp(28px,4vw,40px)/1.15 "Manrope",sans-serif;color:#143c49;letter-spacing:-1.4px;margin:10px 0 8px}
+    .calc-intro p{font-size:13px;color:#6e858d;max-width:640px;margin:0}
+    .calc-layout{display:grid;grid-template-columns:270px 1fr;gap:22px;align-items:start}
+    .calc-sidebar{background:#fff;border:1px solid #e5eded;border-radius:14px;padding:16px;position:sticky;top:96px}
+    .calc-sidebar h2{font:700 13px "Manrope",sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#6e858d;margin:0 0 12px}
+    .calc-search{width:100%;padding:9px 12px;border:1px solid #dfe9e8;border-radius:8px;font-size:12px;margin-bottom:10px;outline:none;background:#f7faf9}
+    .calc-search:focus{border-color:#a8d8d0;background:#fff}
+    .calc-list{list-style:none;padding:0;margin:0;max-height:60vh;overflow-y:auto}
+    .calc-list li button{width:100%;text-align:left;background:transparent;border:0;padding:8px 11px;border-radius:7px;cursor:pointer;font-size:12px;color:var(--ink);font-family:inherit;transition:background .15s,color .15s}
+    .calc-list li button:hover{background:#f0f6f5}
+    .calc-list li button.active{background:#e8f5f2;color:var(--teal-dark);font-weight:600}
+    .calc-main-panel{background:#fff;border:1px solid #e5eded;border-radius:14px;padding:26px 28px}
+    .calc-main-panel h2{font:700 22px "Manrope",sans-serif;color:#143c49;margin:0 0 6px;letter-spacing:-.5px}
+    .calc-stock{font-size:11px;color:#6e858d;margin-bottom:4px}
+    .calc-stock b{color:#34545c}
+    .calc-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+    .calc-field label{display:block;font-size:10px;font-weight:700;color:#6e858d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+    .calc-field input{width:100%;padding:10px 12px;border:1px solid #dfe9e8;border-radius:7px;font-size:14px;font-family:inherit;color:var(--ink);outline:none;background:#fff;transition:border-color .15s}
+    .calc-field input:focus{border-color:#a8d8d0}
+    .calc-button{background:var(--teal);color:#fff;border:0;padding:12px 22px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;transition:background .15s,transform .15s;margin-top:18px}
+    .calc-button:hover{background:var(--teal-dark);transform:translateY(-1px)}
+    .calc-prep{margin-top:16px;padding:11px 14px;background:#fdf7e8;border-left:3px solid #d9a14b;border-radius:5px;font-size:11px;line-height:1.65;color:#6b5b30}
+    .calc-results{margin-top:20px;padding:16px 18px;background:#e8f5f2;border-radius:10px;border:1px solid #cfe9e2}
+    .calc-results h3{margin:0 0 12px;font:700 13px "Manrope",sans-serif;color:#0d8581;text-transform:uppercase;letter-spacing:.6px}
+    .calc-result-item{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid #d4ebe5;font-size:13px}
+    .calc-result-item:last-child{border-bottom:0}
+    .calc-result-item span:first-child{color:#587076;flex:1}
+    .calc-result-item span:last-child{font-weight:700;color:var(--ink);white-space:nowrap}
+    .calc-external-list{margin-top:16px;padding-left:20px;font-size:13px}
+    .calc-external-list li{margin:10px 0}
+    .calc-external-list a{color:var(--teal-dark);font-weight:600}
+    .calc-disclaimer{margin-top:30px;padding:14px 18px;background:#fff;border:1px solid #f0dcb4;border-left:4px solid #d9a14b;border-radius:8px;font-size:11px;line-height:1.65;color:#6b5b30}
+    .calc-footer{border-top:1px solid #e4ecec;margin-top:44px;padding-top:20px;font-size:10px;color:#91a3a5;text-align:center;line-height:1.7}
+    @media(max-width:768px){
+      .calc-layout{grid-template-columns:1fr}
+      .calc-sidebar{position:static}
+      .calc-list{max-height:220px}
+      .calc-form-grid{grid-template-columns:1fr}
+      .calc-main-panel{padding:20px 18px}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="NeoCare, inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 5.5c-10.2 0-18.5 8.3-18.5 18.5S13.8 42.5 24 42.5 42.5 34.2 42.5 24 34.2 5.5 24 5.5Z" stroke="currentColor" stroke-width="2.2"/><path d="M24 13v22M13 24h22" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><circle cx="24" cy="24" r="4.5" fill="#20B6AE"/></svg>
+        </span>
+        <span class="brand-copy"><strong>NeoCare</strong><small>NEONATAL DIGITAL HEALTH</small></span>
+      </a>
+      <a class="header-cta" href="index.html#herramientas">← Volver al catálogo</a>
+    </div>
+  </header>
+
+  <main id="main" class="calc-page">
+    <div class="container">
+      <a href="index.html#herramientas" class="back-link">← Volver al catálogo</a>
+      <div class="calc-intro">
+        <div class="eyebrow eyebrow-dark">CALCULADORAS CLÍNICAS</div>
+        <h1>Calculadoras de infusiones</h1>
+        <p>Preparación de infusiones continuas en neonatología. Ingresá peso, dosis, velocidad de flujo y volumen a preparar. Se calcula el volumen de fármaco y de diluyente necesarios.</p>
+      </div>
+
+      <div class="calc-layout">
+        <aside class="calc-sidebar" aria-label="Listado de fármacos">
+          <h2>Fármacos y soluciones</h2>
+          <input type="search" id="calcSearch" class="calc-search" placeholder="Buscar…" aria-label="Buscar fármaco">
+          <ul id="calcList" class="calc-list"></ul>
+        </aside>
+        <section class="calc-main-panel" id="calcContent" aria-live="polite"></section>
+      </div>
+
+      <div class="calc-disclaimer">
+        <strong>Aviso clínico.</strong> Las calculadoras son recursos de apoyo y no reemplazan la validación farmacéutica ni el juicio del profesional tratante. Antes de administrar, verificá la presentación y concentración del fármaco disponible en tu centro, las unidades del cálculo y la velocidad de infusión indicada. Las fórmulas provienen de la referencia original (NeoWeb Infusions); pueden variar según el protocolo institucional.
+      </div>
+
+      <div class="calc-footer">
+        <div id="year"></div>
+        <div>NeoCare · Neonatal Digital Health — el contenido no reemplaza el juicio clínico.</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  (() => {
+    "use strict";
+    const DRUGS = [
+      { id:"adrenalina", name:"Adrenalina (epinefrina)", doseLabel:"Dosis (rango 0,1 – 1,0 mcg/kg/min)", doseDefault:0.1, flowDefault:0.1, stock:"Ampolla 1:1000 = 1 mg/ml", preparation:"Diluyente: glucosa al 5% o 10%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*60*D/C)/1000;return{amount:v,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"diamorfina", name:"Diamorfina", doseLabel:"Dosis (habitual 15 mcg/kg/h)", doseDefault:15, flowDefault:0.1, stock:"Solución preparada 1 mg/ml", preparation:"Reconstituir ampolla de 10 mg con 1 ml de agua para inyección. Agregar 1 ml de diamorfina (10 mg/ml) a 9 ml de diluyente. Solución: 1 mg/ml. Diluyente: glucosa 5% o 10%, o cloruro de sodio 0,9%.", calculate:(A,B,C,D)=>{const v=A*B*D/C/1000;return{amount:v,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"dinoprostona", name:"Dinoprostona (PGE2)", doseLabel:"Dosis (rango 5 – 20 ng/kg/min)", doseDefault:5, flowDefault:0.1, stock:"Solución preparada 100 mcg/ml", preparation:"Agregar 1 ml de dinoprostona (1 mg/ml) a 9 ml de glucosa 5% o cloruro de sodio 0,9% y mezclar. Solución: 100 mcg/ml.", calculate:(A,B,C,D)=>{const v=(A*B*60*D/C/1000)/100;return{amount:v*100,amountUnit:"mcg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"dobutamina", name:"Dobutamina", doseLabel:"Dosis (rango 10 – 20 mcg/kg/min)", doseDefault:10, flowDefault:1, stock:"Ampolla 250 mg / 20 ml = 12,5 mg/ml", preparation:"Diluyente: glucosa al 5% o 10%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*60*D/C/1000)/12.5;return{amount:v*12.5,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"dopamina", name:"Dopamina", doseLabel:"Dosis (rango 2 – 20 mcg/kg/min)", doseDefault:10, flowDefault:0.1, stock:"Ampolla 200 mg / 5 ml = 40 mg/ml", preparation:"Diluyente: glucosa al 5% o 10%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*60*D/C/1000)/40;return{amount:v*40,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"doxapram", name:"Doxapram", doseLabel:"Dosis (inicial 250 mcg/kg/h)", doseDefault:250, flowDefault:0.1, stock:"Ampolla 100 mg / 5 ml = 20 mg/ml", preparation:"Diluyente: glucosa al 5% o 10%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*D/C/1000)/20;return{amount:v*20,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"electrolitos", name:"Electrolitos (Ca, K, Na)", type:"electrolytes", preparation:"Diluyente: glucosa al 5% o 10%. Ca = gluconato de calcio 10%, K = cloruro de potasio 15%, Na = cloruro de sodio 6%." },
+      { id:"epoprostenol", name:"Epoprostenol (prostaciclina)", doseLabel:"Dosis (rango 1 – 20 ng/kg/min)", doseDefault:1, flowDefault:0.1, stock:"Solución preparada 10 mcg/ml", preparation:"Reconstituir vial de 500 mcg con 50 ml de diluyente para obtener 10 mcg/ml. Diluyente: cloruro de sodio 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*60*D/C/1000)/10;return{amount:v*10,amountUnit:"mcg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"estreptoquinasa", name:"Estreptoquinasa", doseLabel:"Dosis (rango 1000 – 6000 U/kg/h)", doseDefault:1000, flowDefault:1, stock:"Solución reconstituida 50.000 U/ml", preparation:"Antes de iniciar: verificar coagulación, fibrinógeno y recuento de plaquetas; consultar con el responsable. Reconstituir vial de 250.000 U en 5 ml de agua para inyección. Solución: 50.000 U/ml. Diluyente: glucosa 5% o 10%, o cloruro de sodio 0,9%.", calculate:(A,B,C,D)=>{const v=A*B*D/C/50000;return{amount:v*50000,amountUnit:"U",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"fentanilo", name:"Fentanilo", doseLabel:"Dosis (habitual 1 – 5 mcg/kg/h)", doseDefault:1, flowDefault:0.1, stock:"Ampolla 50 mcg/ml", preparation:"Nota: suspender dentro de 2–3 días por desarrollo rápido de tolerancia. Diluyente: glucosa 5% o 10%, o cloruro de sodio 0,9%.", calculate:(A,B,C,D)=>{const amt=A*B*D/C,v=amt/50;return{amount:amt,amountUnit:"mcg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"heparina", name:"Heparina", doseLabel:"Dosis para oclusión vascular (rango 15 – 25 U/kg/h)", doseDefault:15, flowDefault:0.1, stock:"Ampolla 1000 U/ml", preparation:"Diluyente: glucosa al 5% o 10%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*D/C)/1000;return{amount:v*1000,amountUnit:"U",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"insulina", name:"Insulina (neutra)", doseLabel:"Dosis (rango 0,1 – 1,0 U/kg/h)", doseDefault:0.1, flowDefault:0.1, stock:"Solución preparada 10 U/ml", preparation:"Agregar 1 ml de insulina neutra humana (100 U/ml) a 9 ml de cloruro de sodio 0,9% y mezclar. Solución: 10 U/ml. Diluyente: glucosa 5% o 10%, o cloruro de sodio 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*D/C)/10;return{amount:v*10,amountUnit:"U",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"isoprenalina", name:"Isoprenalina", doseLabel:"Dosis (rango 0,02 – 0,5 mcg/kg/min)", doseDefault:0.02, flowDefault:0.1, stock:"Ampolla 100 mcg/ml (= 0,1 mg/ml)", preparation:"Diluyente: glucosa al 5%.", calculate:(A,B,C,D)=>{const v=(A*B*60*D/C/1000)/0.1;return{amount:v*100,amountUnit:"mcg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"lidocaina", name:"Lidocaína", doseLabel:"Dosis (rango 2 – 6 mg/kg/h)", doseDefault:4, flowDefault:0.5, stock:"Ampolla 200 mg/ml (concentrada)", preparation:"Diluyente: glucosa al 5%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*D/C)/200;return{amount:v*200,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"midazolam", name:"Midazolam", doseLabel:"Dosis (rango 30 – 60 mcg/kg/h)", doseDefault:30, flowDefault:0.1, stock:"Ampolla 10 mg / 5 ml = 2 mg/ml", preparation:"Diluyente: glucosa al 5% o 10%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*D/C/1000)/2;return{amount:v*2,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"morfina", name:"Morfina", doseLabel:"Dosis (rango 10 – 40 mcg/kg/h)", doseDefault:10, flowDefault:0.1, stock:"Solución preparada 1 mg/ml", preparation:"Agregar 1 ml de morfina (10 mg/ml) a 9 ml de diluyente. Solución: 1 mg/ml. Diluyente: glucosa 5% o 10%, o cloruro de sodio 0,9%.", calculate:(A,B,C,D)=>{const v=A*B*D/C/1000;return{amount:v,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"nitroprusiato", name:"Nitroprusiato", doseLabel:"Dosis (rango 0,5 – 8 mcg/kg/min)", doseDefault:0.5, flowDefault:1, stock:"Solución preparada 500 mcg/ml", preparation:"Reconstituir ampolla de 50 mg con 2 ml de diluyente. Tomar 0,2 ml (5 mg) y diluir a 10 ml con glucosa 5%. Solución: 500 mcg/ml. Diluyente: glucosa al 5%.", calculate:(A,B,C,D)=>{const v=(A*B*60*D/C)/500;return{amount:v*500,amountUnit:"mcg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"noradrenalina", name:"Noradrenalina (norepinefrina)", doseLabel:"Dosis (rango 0,1 – 1 mcg/kg/min)", doseDefault:0.2, flowDefault:1, stock:"Ampolla 1 mg/ml (base)", preparation:"Diluyente: glucosa al 5% o 10%.", calculate:(A,B,C,D)=>{const v=(A*B*60*D/C)/1000;return{amount:v,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"ranitidina", name:"Ranitidina", doseLabel:"Dosis (rango 30 – 60 mcg/kg/h)", doseDefault:30, flowDefault:0.1, stock:"Ampolla 50 mg / 2 ml = 25 mg/ml", preparation:"Diluyente: glucosa al 5% o 10%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*D/C/1000)/25;return{amount:v*25,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} },
+      { id:"tolazolina", name:"Tolazolina", doseLabel:"Dosis (habitual 200 mcg/kg/h)", doseDefault:200, flowDefault:0.1, stock:"Ampolla 25 mg/ml", preparation:"Diluyente: glucosa al 5% o 10%, o cloruro de sodio al 0,9%.", calculate:(A,B,C,D)=>{const v=(A*B*D/C/1000)/25;return{amount:v*25,amountUnit:"mg",volumeInjection:v,volumeDiluent:D-v};} }
+    ];
+    const escapeHTML = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const fmt = n => (isNaN(n) || !isFinite(n)) ? "—" : String(Math.round(n * 10) / 10);
+    const listEl = document.getElementById("calcList");
+    const contentEl = document.getElementById("calcContent");
+    const searchEl = document.getElementById("calcSearch");
+    function renderList(filter = "") {
+      const f = filter.trim().toLowerCase();
+      const filtered = DRUGS.filter(d => !f || d.name.toLowerCase().includes(f));
+      listEl.innerHTML = filtered.length
+        ? filtered.map(d => `<li><button data-drug="${escapeHTML(d.id)}">${escapeHTML(d.name)}</button></li>`).join("")
+        : `<li style="padding:10px;color:#93a3a5;font-size:11px">Sin resultados</li>`;
+      listEl.querySelectorAll("[data-drug]").forEach(btn => btn.addEventListener("click", () => openDrug(btn.dataset.drug)));
+    }
+    function setActive(id) { listEl.querySelectorAll("[data-drug]").forEach(b => b.classList.toggle("active", b.dataset.drug === id)); }
+    function openDrug(id) {
+      const drug = DRUGS.find(d => d.id === id);
+      if (!drug) return;
+      setActive(id);
+      if (drug.type === "external") {
+        contentEl.innerHTML = `<h2>${escapeHTML(drug.name)}</h2><p style="font-size:12px;color:#6e858d">${escapeHTML(drug.description || "")}</p><ul class="calc-external-list">${(drug.externalLinks || []).map(l => `<li><a href="${escapeHTML(l.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(l.label)} ↗</a></li>`).join("")}</ul>`;
+        return;
+      }
+      if (drug.type === "electrolytes") {
+        contentEl.innerHTML = `<h2>${escapeHTML(drug.name)}</h2><div class="calc-stock"><b>Presentaciones de referencia:</b> ${escapeHTML(drug.preparation)}</div><div class="calc-form-grid"><div class="calc-field"><label>Peso del neonato (kg)</label><input type="number" step="0.01" min="0" id="elA"></div><div class="calc-field"><label>Ca requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" id="elB" value="1"></div><div class="calc-field"><label>K requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" id="elC" value="2"></div><div class="calc-field"><label>Na requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" id="elD" value="4"></div><div class="calc-field"><label>Volumen total de líquidos (ml/kg/24 h)</label><input type="number" step="1" min="0" id="elE" value="150"></div><div class="calc-field"><label>Volumen de infusión a preparar (ml)</label><input type="number" step="1" min="0" id="elF"></div></div><button class="calc-button" id="elCalc">Calcular</button><div id="elResults" class="calc-results" hidden></div>`;
+        document.getElementById("elCalc").addEventListener("click", () => {
+          const A = parseFloat(document.getElementById("elA").value);
+          const B = parseFloat(document.getElementById("elB").value) || 0;
+          const C = parseFloat(document.getElementById("elC").value) || 0;
+          const D = parseFloat(document.getElementById("elD").value) || 0;
+          const E = parseFloat(document.getElementById("elE").value) || 0;
+          const F = parseFloat(document.getElementById("elF").value) || 0;
+          if (!A || !E || !F) { alert("Completá peso, volumen total y volumen a preparar."); return; }
+          const caVol = A*B*(F/E)/0.228;
+          const kVol = A*C*(F/E)/2;
+          const naVol = A*D*(F/E);
+          const dil = F - (caVol + kVol + naVol);
+          const rate = (E/24)*A;
+          const box = document.getElementById("elResults");
+          box.hidden = false;
+          box.innerHTML = `<h3>Resultados</h3><div class="calc-result-item"><span>Gluconato de calcio 10%</span><span>${fmt(caVol)} ml</span></div><div class="calc-result-item"><span>Cloruro de potasio 15%</span><span>${fmt(kVol)} ml</span></div><div class="calc-result-item"><span>Cloruro de sodio 6%</span><span>${fmt(naVol)} ml</span></div><div class="calc-result-item"><span>Volumen de diluyente (glucosa)</span><span>${fmt(dil)} ml</span></div><div class="calc-result-item"><span>Velocidad de infusión</span><span>${fmt(rate)} ml/h</span></div>`;
+        });
+        return;
+      }
+      contentEl.innerHTML = `<h2>${escapeHTML(drug.name)}</h2><div class="calc-stock"><b>Presentación de referencia:</b> ${escapeHTML(drug.stock)}</div><div class="calc-form-grid"><div class="calc-field"><label>Peso del neonato (kg)</label><input type="number" step="0.01" min="0" id="calcA"></div><div class="calc-field"><label>${escapeHTML(drug.doseLabel)}</label><input type="number" step="0.01" min="0" id="calcB" value="${drug.doseDefault}"></div><div class="calc-field"><label>Velocidad de flujo (ml/h)</label><input type="number" step="0.01" min="0" id="calcC" value="${drug.flowDefault}"></div><div class="calc-field"><label>Volumen de infusión a preparar (ml)</label><input type="number" step="0.01" min="0" id="calcD"></div></div><button class="calc-button" id="calcBtn">Calcular</button><div class="calc-prep">${escapeHTML(drug.preparation)}</div><div id="calcResults" class="calc-results" hidden></div>`;
+      document.getElementById("calcBtn").addEventListener("click", () => {
+        const A = parseFloat(document.getElementById("calcA").value);
+        const B = parseFloat(document.getElementById("calcB").value);
+        const C = parseFloat(document.getElementById("calcC").value);
+        const D = parseFloat(document.getElementById("calcD").value);
+        if (!A || !B || !C || !D) { alert("Completá todos los campos para calcular."); return; }
+        const r = drug.calculate(A, B, C, D);
+        const box = document.getElementById("calcResults");
+        box.hidden = false;
+        box.innerHTML = `<h3>Resultados</h3><div class="calc-result-item"><span>Cantidad de fármaco a agregar</span><span>${fmt(r.amount)} ${r.amountUnit}</span></div><div class="calc-result-item"><span>Volumen de fármaco a agregar</span><span>${fmt(r.volumeInjection)} ml</span></div><div class="calc-result-item"><span>Volumen de diluyente</span><span>${fmt(r.volumeDiluent)} ml</span></div>`;
+      });
+    }
+    searchEl.addEventListener("input", () => renderList(searchEl.value));
+    document.getElementById("year").textContent = "© " + new Date().getFullYear() + " NeoCare · Todos los derechos reservados.";
+    renderList();
+    openDrug("adrenalina");
+  })();
+  </script>
+</body>
+</html>
