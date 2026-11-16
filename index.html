@@ -14,6 +14,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
+  
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="#" aria-label="NeoCare, inicio">
@@ -81,7 +82,7 @@
       <div class="container">
         <div class="section-heading">
           <div><div class="eyebrow eyebrow-dark">CENTRO DE HERRAMIENTAS</div><h2>Explorá <em>NeoCare.</em></h2><p>Encontrá recursos y aplicaciones según tu necesidad clínica o área de trabajo.</p></div>
-          <div class="tool-count"><strong id="toolCount">13</strong><span>herramientas<br>en catálogo</span></div>
+          <div class="tool-count"><strong id="toolCount">12</strong><span>herramientas<br>en catálogo</span></div>
         </div>
         <div class="catalog-controls">
           <label class="search-box"><span class="search-icon">⌕</span><input id="searchInput" type="search" placeholder="Buscar herramientas, temas o palabras clave…" autocomplete="off"><kbd>⌘ K</kbd></label>
@@ -122,9 +123,31 @@
     <section class="closing-section"><div class="container closing-inner"><div><div class="eyebrow">NEOCARE · NEONATAL DIGITAL HEALTH</div><h2>Ideas que se convierten<br>en herramientas.</h2></div><a class="button button-primary" href="#herramientas">Volver al catálogo <span>↑</span></a></div></section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-main"><a class="brand footer-brand" href="#"><span class="brand-mark"><svg viewBox="0 0 48 48" fill="none"><path d="M24 5.5c-10.2 0-18.5 8.3-18.5 18.5S13.8 42.5 24 42.5 42.5 34.2 42.5 24 34.2 5.5 24 5.5Z" stroke="currentColor" stroke-width="2.2"/><path d="M24 13v22M13 24h22" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><circle cx="24" cy="24" r="4.5" fill="#20B6AE"/></svg></span><span class="brand-copy"><strong>NeoCare</strong><small>NEONATAL DIGITAL HEALTH</small></span></a><p>Herramientas digitales para la práctica neonatal.</p><div class="footer-links"><a href="#herramientas">Herramientas</a><a href="#recursos">Recursos</a><a href="#proyecto">Acerca de</a><a href="mailto:saludneonatal@gmail.com">Contacto</a></div></div><div class="container footer-bottom"><span>© <span id="year"></span> NeoCare. Todos los derechos reservados.</span><span>El contenido de este sitio es informativo y no reemplaza el juicio clínico.</span></div></footer>
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <a class="brand footer-brand" href="#">
+        <span class="brand-mark"><svg viewBox="0 0 48 48" fill="none"><path d="M24 5.5c-10.2 0-18.5 8.3-18.5 18.5S13.8 42.5 24 42.5 42.5 34.2 42.5 24 34.2 5.5 24 5.5Z" stroke="currentColor" stroke-width="2.2"/><path d="M24 13v22M13 24h22" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><circle cx="24" cy="24" r="4.5" fill="#20B6AE"/></svg></span>
+        <span class="brand-copy"><strong>NeoCare</strong><small>NEONATAL DIGITAL HEALTH</small></span>
+      </a>
+      <p>Herramientas digitales para la práctica neonatal.</p>
+      <div class="footer-links">
+        <a href="#herramientas">Herramientas</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#proyecto">Acerca de</a>
+        <a href="mailto:saludneonatal@gmail.com">Contacto</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© <span id="year"></span> NeoCare. Todos los derechos reservados.</span>
+      <span>El contenido de este sitio es informativo y no reemplaza el juicio clínico.</span>
+    </div>
+  </footer>
 
-  <dialog class="app-dialog" id="appDialog" aria-labelledby="dialogTitle"><button class="dialog-close" id="dialogClose" aria-label="Cerrar">×</button><div id="dialogContent"></div></dialog>
+  <dialog class="app-dialog" id="appDialog" aria-labelledby="dialogTitle">
+    <button class="dialog-close" id="dialogClose" aria-label="Cerrar">×</button>
+    <div id="dialogContent"></div>
+  </dialog>
+  
   <script src="apps.js"></script>
   <script src="script.js"></script>
 </body>

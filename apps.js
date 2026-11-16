@@ -1,19 +1,6 @@
 /*
  * CATÁLOGO DE NeoCare
  * Para agregar o editar herramientas, modificá los objetos de este archivo.
- *
- * Campos:
- * id: identificador único
- * title: nombre visible
- * category: crecimiento | calculadoras | clinica | gestion | tecnologia
- * description: resumen breve
- * detail: descripción ampliada para la ficha
- * status: available | beta | development
- * url: dirección de la aplicación. Usá "" si todavía no está publicada.
- * tags: palabras clave para el buscador
- * icon: símbolo breve
- * version / updated: información de versión (opcional)
- * references: referencias bibliográficas (opcional)
  */
 window.NEOCARE_APPS = [
   {
@@ -41,6 +28,19 @@ window.NEOCARE_APPS = [
     ]
   },
   {
+    id: "npt-calc", title: "Nutrición Parenteral (NPT)", category: "calculadoras",
+    categoryLabel: "Nutrición neonatal", icon: "🥣",
+    description: "Cálculo de macronutrientes, osmolaridad y relaciones calóricas en NPT.",
+    detail: "Herramienta para el cálculo de nutrición parenteral total en neonatos. Permite ingresar peso, aporte hídrico, flujo de glucosa (GIR), aminoácidos, lípidos y sodio. Calcula automáticamente las calorías totales, la distribución de macronutrientes, la concentración de glucosa y la osmolaridad estimada, brindando alertas clínicas sobre la vía de administración (periférica vs. central) y la proporción adecuada de lípidos e hidratos de carbono.",
+    status: "available", statusLabel: "Disponible", url: "calculadora-npt.html",
+    tags: ["NPT", "nutrición parenteral", "GIR", "aminoácidos", "lípidos", "glucosa", "osmolaridad", "calorías", "macronutrientes"],
+    version: "1.0", updated: "2026-11-16",
+    references: [
+      "Fórmulas y criterios de osmolaridad estándar para nutrición parenteral neonatal.",
+      "Verificar el acceso vascular y las concentraciones máximas permitidas según el protocolo institucional."
+    ]
+  },
+  {
     id: "ucinutri", title: "UCINUTRI", category: "calculadoras",
     categoryLabel: "Nutrición neonatal", icon: "＋",
     description: "Herramientas de apoyo para cálculos y seguimiento nutricional neonatal.",
@@ -64,11 +64,14 @@ window.NEOCARE_APPS = [
     id: "neo-clinical", title: "NeoClinical", category: "clinica",
     categoryLabel: "Clínica neonatal", icon: "✚",
     description: "Recursos de apoyo a la evaluación y toma de decisiones clínicas.",
-    detail: "Sección para herramientas clínicas, escalas y algoritmos de apoyo. Las herramientas no sustituyen la evaluación individual ni el juicio del profesional tratante.",
-    status: "development", statusLabel: "En desarrollo", url: "",
-    tags: ["score", "evaluación", "sepsis", "ictericia", "dolor", "ventilación", "clínica"],
-    version: "Próximamente", updated: "A definir",
-    references: ["Incorporar guías y consensos vigentes."]
+    detail: "Sección para herramientas clínicas, escalas y algoritmos de apoyo. Actualmente incluye la calculadora de Hiperbilirrubinemia basada en las guías de la Academia Americana de Pediatría (AAP) 2022 para el manejo de la ictericia neonatal, con umbrales de fototerapia y exanguinotransfusión. Las herramientas no sustituyen la evaluación individual ni el juicio del profesional tratante.",
+    status: "available", statusLabel: "Disponible", url: "neo-clinical.html",
+    tags: ["score", "evaluación", "sepsis", "ictericia", "bilirrubina", "fototerapia", "AAP 2022", "dolor", "ventilación", "clínica"],
+    version: "1.0", updated: "2026-11-16",
+    references: [
+      "Kemper AR, et al. Clinical Practice Guideline Revision: Management of Hyperbilirubinemia in the Newborn Infant 35 or More Weeks of Gestation. Pediatrics. 2022;150(3):e2022058859.",
+      "Incorporar guías y consensos vigentes."
+    ]
   },
   {
     id: "neo-dashboard", title: "NeoDashboard", category: "gestion",
