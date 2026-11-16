@@ -104,6 +104,13 @@
     render();
   }));
 
+  const heroSearchForm = document.getElementById("heroSearchForm");
+  if (heroSearchForm) heroSearchForm.addEventListener("submit", event => {
+    event.preventDefault();
+    document.getElementById("herramientas").scrollIntoView({ behavior: "smooth" });
+    render();
+  });
+
   filterRow.addEventListener("click", event => {
     const button = event.target.closest("[data-filter]");
     if (!button) return;
