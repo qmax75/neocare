@@ -25,6 +25,7 @@
       </a>
       <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
       <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+        <a href="#inicio">Inicio</a>
         <a href="#herramientas">Herramientas</a>
         <a href="#recursos">Recursos</a>
         <a href="#proyecto">El proyecto</a>
@@ -34,18 +35,19 @@
   </header>
 
   <main id="main">
-    <section class="hero">
+    <section class="hero" id="inicio">
       <div class="hero-grid"></div>
       <div class="container hero-content">
         <div class="hero-copy">
           <div class="eyebrow"><span class="pulse-dot"></span> INNOVACIÓN APLICADA A LA PRÁCTICA NEONATAL</div>
-          <h1>Conocimiento clínico.<br><em>Herramientas digitales.</em></h1>
+          <h1>Tecnología al servicio<br><em>de la salud neonatal.</em></h1>
           <p class="hero-lead">Un espacio de utilidades, aplicaciones y recursos diseñados para acompañar el trabajo de los profesionales de la neonatología.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#herramientas">Explorar herramientas <span>→</span></a>
             <a class="button button-ghost" href="#proyecto">Conocer NeoCare</a>
           </div>
           <div class="hero-note"><span class="note-icon">✳</span> Tecnología como apoyo. El criterio clínico siempre es central.</div>
+          <div class="hero-shortcuts" aria-label="Accesos rápidos"><span>Explorá por área</span><a href="#herramientas" data-quick-filter="calculadoras">Calculadoras</a><a href="#herramientas" data-quick-filter="clinica">Clínica</a><a href="#herramientas" data-quick-filter="crecimiento">Crecimiento</a></div>
         </div>
         <div class="hero-visual" aria-label="Panel ilustrativo de NeoCare">
           <div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div>
@@ -82,7 +84,7 @@
       <div class="container">
         <div class="section-heading">
           <div><div class="eyebrow eyebrow-dark">CENTRO DE HERRAMIENTAS</div><h2>Explorá <em>NeoCare.</em></h2><p>Encontrá recursos y aplicaciones según tu necesidad clínica o área de trabajo.</p></div>
-          <div class="tool-count"><strong id="toolCount">12</strong><span>herramientas<br>en catálogo</span></div>
+          <div class="tool-count"><strong id="toolCount">—</strong><span>herramientas<br>en catálogo</span></div>
         </div>
         <div class="catalog-controls">
           <label class="search-box"><span class="search-icon">⌕</span><input id="searchInput" type="search" placeholder="Buscar herramientas, temas o palabras clave…" autocomplete="off"><kbd>⌘ K</kbd></label>
@@ -98,7 +100,7 @@
         </div>
         <div class="tools-grid" id="toolsGrid" aria-live="polite"></div>
         <div class="empty-state" id="emptyState" hidden><div>⌕</div><h3>No encontramos resultados</h3><p>Probá con otro término o cambiá los filtros.</p><button class="text-button" id="clearFilters">Limpiar búsqueda y filtros</button></div>
-        <div class="catalog-footer"><span>¿Tenés una idea o encontraste un problema?</span><a href="mailto:saludneonatal@gmail.com?subject=Consulta%20NeoCare">Contactar al equipo ↗</a></div>
+        <div class="catalog-footer"><span>El catálogo se actualiza a medida que se publican nuevas herramientas.</span><a href="mailto:saludneonatal@gmail.com?subject=Consulta%20NeoCare">Contactar al equipo ↗</a></div>
       </div>
     </section>
 
