@@ -93,6 +93,17 @@
     }
   }
 
+  document.querySelectorAll("[data-quick-filter]").forEach(link => link.addEventListener("click", () => {
+    const filter = link.dataset.quickFilter;
+    activeFilter = filter;
+    favoritesOnly = false;
+    favoritesToggle.classList.remove("active");
+    favoritesToggle.setAttribute("aria-pressed", "false");
+    favoritesToggle.textContent = "☆ Mis favoritos";
+    filterRow.querySelectorAll(".filter-chip").forEach(chip => chip.classList.toggle("active", chip.dataset.filter === filter));
+    render();
+  }));
+
   filterRow.addEventListener("click", event => {
     const button = event.target.closest("[data-filter]");
     if (!button) return;
