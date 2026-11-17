@@ -80,3 +80,30 @@
 /* Orden de capas para que las fotografías queden detrás del contenido */
 .category-card::before,.featured-tool::before,.tool-card::before{z-index:0}
 .category-card>* ,.featured-tool>* ,.tool-card>*{position:relative;z-index:1}
+
+
+/* NeoCare: presentation without photographic images */
+img,
+picture,
+picture img,
+.hero img,
+.newsletter-feature img {
+  display: none !important;
+}
+*,
+*::before,
+*::after {
+  background-image: none !important;
+}
+.hero-art {
+  background: radial-gradient(circle at 50% 50%, rgba(39, 211, 195, .16), transparent 68%);
+}
+.category-card,
+.featured-tool,
+.tool-card,
+.resource-item,
+.newsletter-feature,
+.summary-card,
+.article-card {
+  background-color: #fff;
+}
