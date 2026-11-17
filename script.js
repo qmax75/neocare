@@ -31,7 +31,7 @@
     const safeTitle = escapeHTML(app.title);
     const hasUrl = Boolean(app.url && app.url.trim());
     return `
-      <article class="tool-card">
+      <article class="tool-card" data-category="${escapeHTML(app.category)}">
         <div class="card-topline"><span class="card-category">${escapeHTML(app.categoryLabel || categoryNames[app.category] || "Herramienta")}</span>
           <button class="favorite-button ${isFavorite ? "is-favorite" : ""}" data-favorite="${escapeHTML(app.id)}" aria-label="${isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}" aria-pressed="${isFavorite}">${isFavorite ? "★" : "☆"}</button>
         </div>
