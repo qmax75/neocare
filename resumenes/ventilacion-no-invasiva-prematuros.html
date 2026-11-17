@@ -14,7 +14,7 @@
 <section class="panel"><h2>¿Qué investigó?</h2><p>En 30 prematuros clínicamente estables se compararon CPAP nasal, NIPPV no sincronizada y NIPPV sincronizada neuralmente, en períodos breves de dos horas. Se evaluaron variables respiratorias y hemodinámicas.</p><p>No se observaron diferencias significativas en el gasto ventricular derecho o izquierdo entre modalidades. La NIPPV sincronizada redujo la actividad diafragmática máxima; ambas modalidades NIPPV mejoraron la puntuación ecográfica de aireación pulmonar frente a CPAP.</p></section>
 <section class="panel"><h2>Interpretación y aplicabilidad</h2><div class="callout"><strong>Lectura para profesionales</strong><p>Los resultados fisiológicos de corto plazo no prueban superioridad en desenlaces clínicos como displasia broncopulmonar, mortalidad o duración del soporte. La muestra fue pequeña, la exposición breve y los análisis secundarios exploratorios; no extrapolar automáticamente a prematuros inestables.</p></div><div class="callout"><strong>En palabras sencillas</strong><p>El estudio comparó distintas formas de ayudar a respirar a bebés prematuros. Encontró diferencias en algunas mediciones durante períodos cortos, pero no demuestra todavía cuál opción mejora más la evolución a largo plazo.</p></div><p class="muted"><b>Diseño del estudio:</b> Ensayo aleatorizado cruzado (n=30). La fuerza de las conclusiones depende del diseño, la población y los desenlaces evaluados.</p></section>
 <section class="panel source"><h2>Fuente original y transparencia</h2><p><b>Autores:</b> Naknin N, Yangthara B, Kitsommart R, Altit G, Wutthigate P.</p><p><b>Referencia:</b> <a href="https://doi.org/10.1038/s41390-026-05593-1" target="_blank" rel="noopener noreferrer">https://doi.org/10.1038/s41390-026-05593-1</a></p><p class="note">Este contenido es una síntesis editorial y educativa. Consultá el artículo completo y las guías vigentes. No reemplaza protocolos institucionales ni el juicio del equipo tratante.</p>
-<h2 style="margin-top:24px">Compartir este resumen</h2><div class="share"><button class="ig" onclick="shareNative()">Instagram / compartir</button><button class="fb" onclick="shareFacebook()">Facebook</button><button class="wa" onclick="shareWhatsApp()">WhatsApp</button><button class="copy" onclick="copyLink()">Copiar URL</button></div><p class="note">Instagram no ofrece un enlace web universal para publicar automáticamente en el feed. En móviles, “Instagram / compartir” abre el menú nativo del dispositivo cuando está disponible; también podés copiar la URL y pegarla en una historia, mensaje o publicación.</p></section>
+<h2 style="margin-top:24px">Compartir este resumen</h2><div class="share"><button class="ig" onclick="shareInstagram()">Instagram · compartir placa</button><button onclick="downloadSocialImage()">Descargar placa</button><button onclick="shareNative()">Compartir enlace</button><button class="fb" onclick="shareFacebook()">Facebook</button><button class="wa" onclick="shareWhatsApp()">WhatsApp</button><button class="copy" onclick="copyLink()">Copiar URL</button></div><p class="note">Instagram no ofrece publicación web universal automática. El botón permite compartir la placa mediante el menú nativo cuando el dispositivo lo admite; si no, descarga una imagen vertical lista para subir a una historia o publicación. La URL permanente puede copiarse y pegarse en el texto o enviarse por mensaje.</p></section>
 </main><footer class="footer"><div class="wrap">NeoCare · Neonatal Digital Health · <a href="https://qmax75.github.io/neocare/centro-cientifico.html">Explorar centro científico</a></div></footer>
 <script>
 const pageUrl=window.location.href;
@@ -24,4 +24,35 @@ async function shareNative(){if(navigator.share){try{await navigator.share({titl
 async function copyLink(){try{await navigator.clipboard.writeText(pageUrl);alert('Enlace copiado. Ya puedes pegarlo donde quieras.');}catch(e){prompt('Copia este enlace:',pageUrl);}}
 function shareWhatsApp(){window.open('https://wa.me/?text='+encodeURIComponent(pageTitle+' — '+pageUrl),'_blank','noopener');}
 function shareFacebook(){window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(pageUrl),'_blank','noopener');}
+async function makeSocialImage(){
+ const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
+ const grad=ctx.createLinearGradient(0,0,1080,1350);grad.addColorStop(0,'#07384a');grad.addColorStop(1,'#0b6872');ctx.fillStyle=grad;ctx.fillRect(0,0,1080,1350);
+ ctx.fillStyle='#35d4c6';ctx.fillRect(78,92,100,10);
+ ctx.fillStyle='#ffffff';ctx.font='700 34px Arial';ctx.fillText('NEOCARE  ·  RESUMEN CIENTÍFICO',78,160);
+ ctx.fillStyle='#65e0d3';ctx.font='700 24px Arial';wrapCanvas(ctx,document.querySelector('.eyebrow')?.textContent||'NEONATOLOGÍA',78,250,900,38,2);
+ ctx.fillStyle='#ffffff';ctx.font='800 66px Arial';const heading=document.querySelector('h1')?.textContent||document.title;let y=390;y=wrapCanvas(ctx,heading,78,y,900,78,5);
+ ctx.fillStyle='#d6eeee';ctx.font='36px Arial';const description=document.querySelector('meta[name="description"]')?.content||'';y=wrapCanvas(ctx,description,78,y+45,900,52,5);
+ ctx.fillStyle='#35d4c6';ctx.fillRect(78,1070,924,3);
+ ctx.fillStyle='#ffffff';ctx.font='700 30px Arial';ctx.fillText('Evidencia, lectura crítica y cuidado neonatal',78,1140);
+ ctx.fillStyle='#c3e3e2';ctx.font='24px Arial';ctx.fillText('Leé el resumen completo y consultá la fuente original',78,1190);
+ ctx.font='20px Arial';ctx.fillText('qmax75.github.io/neocare/resumenes/',78,1255);
+ return await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+}
+function wrapCanvas(ctx,text,x,y,maxWidth,lineHeight,maxLines){
+ const words=String(text).split(/\s+/);let line='',lines=0;
+ for(let i=0;i<words.length;i++){const test=line?line+' '+words[i]:words[i];if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line,x,y);line=words[i];y+=lineHeight;lines++;if(lines>=maxLines-1)break;}else line=test;}
+ if(line&&lines<maxLines)ctx.fillText(line,x,y);return y+lineHeight;
+}
+async function downloadSocialImage(){
+ const blob=await makeSocialImage();if(!blob){alert('No se pudo generar la placa.');return;}
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='neocare-resumen-instagram.png';a.click();URL.revokeObjectURL(a.href);
+}
+async function shareInstagram(){
+ const blob=await makeSocialImage();if(!blob)return;
+ const file=new File([blob],'neocare-resumen.png',{type:'image/png'});
+ if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+  try{await navigator.share({files:[file],title:pageTitle,text:pageText+' '+pageUrl});return;}catch(e){}
+ }
+ await downloadSocialImage();alert('Placa descargada. Abrí Instagram y subila a una historia o publicación; podés pegar también la URL del resumen.');
+}
 </script></body></html>
