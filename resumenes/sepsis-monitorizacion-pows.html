@@ -11,8 +11,39 @@
 <style>/* Fotografía clínica NeoCare */
 .hero{background:radial-gradient(circle at 85% 30%,rgba(32,209,195,.2),transparent 30%),linear-gradient(115deg,#062f42,#075c6b)}
 </style>
+<style>
+.site-header{height:82px;background:#07384a;color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 4px 22px rgba(0,30,40,.12);font-family:"DM Sans",system-ui,sans-serif}
+.site-header .container{width:min(1480px,calc(100% - 52px));margin-inline:auto}
+.site-header .header-inner{height:100%;display:flex;align-items:center;gap:30px}
+.site-header .brand{display:inline-flex;align-items:center;gap:11px;flex:none;color:#fff;text-decoration:none}
+.site-header .brand-mark{width:45px;height:45px;display:grid;place-items:center;color:#23d2c5}
+.site-header .brand-mark svg{width:100%;height:100%}
+.site-header .brand-copy{display:flex;flex-direction:column;line-height:1.1}
+.site-header .brand-copy strong{font:800 30px "Manrope",sans-serif;letter-spacing:-1.2px;color:#fff;margin:0}
+.site-header .brand-copy strong span{color:#29d1c6}
+.site-header .brand-copy small{font-size:9px;letter-spacing:1.5px;font-weight:700;color:#a7c5ca;margin-top:5px}
+.site-header .main-nav{display:flex;align-items:center;justify-content:center;gap:clamp(16px,2.7vw,36px);margin-left:auto}
+.site-header .main-nav a{font-size:14px;font-weight:700;color:#d7e9e9;text-decoration:none;white-space:nowrap;transition:color .2s}
+.site-header .main-nav a:hover,.site-header .main-nav a:first-child{color:#36d6cb}
+.site-header .header-favorites{border:1px solid rgba(193,239,235,.25);background:rgba(255,255,255,.06);border-radius:8px;padding:14px 16px;color:#fff;font-size:14px;font-weight:700;white-space:nowrap;text-decoration:none}
+.site-header .mobile-menu-button{display:none}
+@media(max-width:950px){.site-header .header-inner{gap:18px}.site-header .main-nav{gap:16px}.site-header .main-nav a{font-size:11px}.site-header .header-favorites{padding:10px}.site-header .header-favorites span{display:none}}
+@media(max-width:760px){.site-header{height:auto;min-height:72px}.site-header .container{width:calc(100% - 34px)}.site-header .header-inner{min-height:72px;gap:10px}.site-header .brand-mark{width:38px;height:38px}.site-header .brand-copy strong{font-size:24px}.site-header .mobile-menu-button{display:flex;margin-left:auto;border:0;background:transparent;width:37px;height:37px;flex-direction:column;justify-content:center;gap:5px;padding:7px;cursor:pointer}.site-header .mobile-menu-button span{height:2px;width:21px;background:#d7f3f0;border-radius:2px}.site-header .main-nav{display:none;position:absolute;left:0;right:0;top:100%;background:#07384a;padding:17px 22px 22px;margin:0;box-shadow:0 12px 18px rgba(10,50,57,.2);flex-direction:column;align-items:flex-start;gap:16px}.site-header .main-nav.is-open{display:flex}.site-header .main-nav a{font-size:13px}.site-header .header-favorites{font-size:16px;padding:8px 10px}.site-header .header-favorites span{display:none}}
+</style>
 </head><body>
-<header class="top"><div class="wrap"><a class="brand" href="https://qmax75.github.io/neocare/">Neo<span>Care</span></a><a class="back" href="https://qmax75.github.io/neocare/centro-cientifico.html">← Centro científico neonatal</a></div></header>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html#inicio" aria-label="NeoCare, inicio">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M24 4.5c-10.8 0-19.5 8.7-19.5 19.5S13.2 43.5 24 43.5 43.5 34.8 43.5 24 34.8 4.5 24 4.5Z" stroke="currentColor" stroke-width="2"/><path d="M24 13v22M13 24h22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="24" r="4" fill="#20d1c3"/></svg></span>
+      <span class="brand-copy"><strong>Neo<span>Care</span></strong><small>NEONATAL DIGITAL HEALTH</small></span>
+    </a>
+    <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a href="index.html#inicio">Inicio</a><a href="index.html#categorias">Categorías</a><a href="index.html#herramientas">Herramientas</a><a href="index.html#recursos">Recursos</a><a href="index.html#boletin">Publicaciones destacadas</a><a href="index.html#proyecto">Acerca de</a>
+    </nav>
+    <a class="header-favorites" href="index.html#herramientas">☆ <span>Mis favoritos</span></a>
+  </div>
+</header>
 <section class="hero"><div class="wrap"><div class="eyebrow">SEPSIS · MONITORIZACIÓN PREDICTIVA</div><h1>¿Puede la monitorización continua anticipar la sepsis neonatal grave?</h1><p class="dek">Resumen del estudio sobre un sistema de alertas basado en frecuencia cardíaca y oximetría para estimar riesgo de sepsis tardía en recién nacidos de muy bajo peso.</p><div class="meta"><span class="pill">14 noviembre 2026</span><span class="pill">Cohorte retrospectiva multicéntrica</span><span class="pill">Resumen científico NeoCare</span></div></div></section>
 <main class="wrap main">
 <section class="panel"><h2>¿Qué investigó?</h2><p>El trabajo evaluó el <b>Pulse Oximetry Warning System (POWS)</b>, que combina patrones de frecuencia cardíaca y saturación periférica de oxígeno para estimar el riesgo de sepsis de inicio tardío en las siguientes 24 horas. El análisis incluyó 84 recién nacidos de muy bajo peso y 89 episodios de sepsis confirmada por cultivo.</p><div class="metrics"><div class="metric"><b>84</b><span>recién nacidos incluidos</span></div><div class="metric"><b>89</b><span>episodios analizados</span></div><div class="metric"><b>19 h</b><span>ventana previa con aumento de la señal</span></div></div><p>Veintisiete episodios (30,3%) se clasificaron como sepsis grave según nSOFA &gt;4. En esos episodios, POWS mostró una trayectoria ascendente más pronunciada antes de la toma de hemocultivo.</p></section>
@@ -59,4 +90,7 @@ async function shareInstagram(){
  }
  await downloadSocialImage();alert('Placa descargada. Abrí Instagram y subila a una historia o publicación; podés pegar también la URL del resumen.');
 }
-</script></body></html>
+</script><script>
+(()=>{const b=document.getElementById('mobileMenuButton'),n=document.getElementById('mainNav');if(!b||!n)return;b.addEventListener('click',()=>{const open=n.classList.toggle('is-open');b.setAttribute('aria-expanded',String(open));b.setAttribute('aria-label',open?'Cerrar menú':'Abrir menú')});n.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{n.classList.remove('is-open');b.setAttribute('aria-expanded','false')}));})();
+</script>
+</body></html>
