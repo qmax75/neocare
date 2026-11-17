@@ -51,3 +51,7 @@ neocare/
 ## Desarrollo
 
 El sitio es estático. Para incorporar una herramienta nueva, agregá su ficha en `apps.js`, asignale una categoría existente, indicá su estado real y completá descripción, ruta, etiquetas y referencias. No alteres fórmulas ni criterios clínicos sin revisión profesional y documentación verificable.
+
+## Identidad visual e imágenes
+
+La interfaz utiliza ilustraciones SVG propias y livianas para representar el cuidado neonatal, las herramientas clínicas, la nutrición parenteral y la monitorización. Los recursos se encuentran en `assets/` y se reutilizan en la portada, las tarjetas destacadas, los recursos científicos y los encabezados de las aplicaciones. Se priorizan gráficos vectoriales para mantener nitidez en pantallas de alta densidad y tiempos de carga reducidos.
