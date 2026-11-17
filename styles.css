@@ -50,3 +50,8 @@
 .newsletter-aside>a{color:#55dfd2;font-size:10px;font-weight:800;text-decoration:none;margin-top:10px}
 .newsletter-note{font-size:10px;color:#7b9094;margin:13px 2px 0}
 @media(max-width:760px){.newsletter-section{padding:58px 0}.newsletter-feature{grid-template-columns:1fr}.newsletter-copy{padding:23px}.newsletter-aside{padding:24px}.newsletter-number{font-size:60px}}
+
+/* Centro de consulta y actualización científica neonatal */
+.newsletter-feature{grid-template-columns:minmax(0,1.55fr) minmax(240px,.7fr)}
+.newsletter-aside{background:linear-gradient(145deg,#07384a,#0b6570)}
+.newsletter-label{letter-spacing:.8px}
