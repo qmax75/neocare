@@ -58,7 +58,7 @@
 
 /* Fotografía editorial NeoCare */
 :root{--photo-baby:url("https://images.unsplash.com/photo-1542884923-7d83f5826a1f?auto=format&fit=crop&w=1800&q=85");--photo-nurse:url("https://images.unsplash.com/photo-1758654859751-7dfe0c8388a3?auto=format&fit=crop&w=1400&q=82");--photo-steth:url("https://images.unsplash.com/photo-1700832082200-af7deeb63d9b?auto=format&fit=crop&w=1000&q=82");--photo-monitor:url("https://images.unsplash.com/photo-1770836037704-44bd8c7b6978?auto=format&fit=crop&w=1400&q=82")}
-.hero-backdrop{background-image:linear-gradient(90deg,rgba(4,39,56,.93) 0%,rgba(5,61,76,.82) 43%,rgba(5,61,76,.12) 100%),var(--photo-baby);background-position:center,right center;background-size:cover}
+.hero-backdrop{background-image:linear-gradient(90deg,rgba(4,39,56,.93) 0%,rgba(5,61,76,.82) 43%,rgba(5,61,76,.12) 100%);background-position:center;background-size:cover}
 .neonatal-illustration{position:relative;background-image:linear-gradient(135deg,rgba(5,50,67,.05),rgba(5,50,67,.16)),var(--photo-baby);background-size:cover;background-position:58% center;border-radius:28px 90px 28px 90px}
 .neonatal-illustration::before{display:none}.neonatal-illustration svg{display:none}
 .category-card{position:relative;isolation:isolate;overflow:hidden;padding-top:116px;background:linear-gradient(180deg,#fff 0%,#f5fbfa 100%)}
@@ -76,3 +76,7 @@
 .tool-card::before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:108px;background-size:cover;background-position:center}
 .tool-card[data-category="calculadoras"]::before{background-image:var(--photo-steth)}.tool-card[data-category="clinica"]::before{background-image:var(--photo-monitor)}.tool-card[data-category="crecimiento"]::before{background-image:var(--photo-nurse)}.tool-card[data-category="gestion"]::before{background-image:var(--photo-monitor)}.tool-card[data-category="tecnologia"]::before{background-image:var(--photo-nurse)}
 @media(max-width:760px){.neonatal-illustration{height:300px;border-radius:22px 54px 22px 54px}.featured-tool{min-height:0;padding-top:142px}.featured-tool::before{height:126px}.category-card{padding-top:108px}.category-card::before{height:92px}.tool-card{padding-top:120px}.tool-card::before{height:102px}}
+
+/* Orden de capas para que las fotografías queden detrás del contenido */
+.category-card::before,.featured-tool::before,.tool-card::before{z-index:0}
+.category-card>* ,.featured-tool>* ,.tool-card>*{position:relative;z-index:1}
