@@ -71,3 +71,6 @@
 .resource-symbol{background-image:none!important;color:#70e0d0!important;font-size:18px!important;background-color:rgba(61,202,186,.16)!important}
 .about-emblem{background:linear-gradient(145deg,#e8f7f4,#c9ece6)!important}
 .newsletter-aside{background:linear-gradient(145deg,#07384a,#0b6570)!important}
+
+/* Barra principal: mismo ancho y alineación en todas las páginas */
+.site-header>.container{width:min(1480px,calc(100% - 52px))}
