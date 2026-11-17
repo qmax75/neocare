@@ -33,3 +33,20 @@
 .about-emblem{border-radius:22px;background:linear-gradient(180deg,rgba(7,56,74,.05),rgba(7,56,74,.45)),url("assets/care-team.svg") center/cover no-repeat;overflow:hidden}
 .about-emblem .emblem-orbit,.about-emblem .emblem-heart,.about-emblem small{filter:drop-shadow(0 3px 8px rgba(0,30,40,.18))}
 @media(max-width:760px){.neonatal-illustration{height:300px}.featured-tool{padding-top:122px}.about-emblem{min-height:220px}}
+
+/* Boletín NeoCare integrado a la portada */
+.newsletter-section{background:linear-gradient(180deg,#f3faf9 0%,#fff 100%);padding:86px 0}
+.newsletter-feature{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(240px,.7fr);border:1px solid #dcebea;border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 14px 40px rgba(8,55,69,.07)}
+.newsletter-copy{padding:34px 38px}
+.newsletter-label{display:inline-block;color:#078e91;background:#e6f7f3;border-radius:20px;padding:7px 11px;font-size:9px;font-weight:800;letter-spacing:1px}
+.newsletter-copy h3{font:800 clamp(22px,3vw,31px)/1.2 Manrope,sans-serif;letter-spacing:-.8px;color:#07384a;max-width:620px;margin:17px 0 12px}
+.newsletter-copy p,.newsletter-aside p{font-size:12px;line-height:1.7;color:#607a80;max-width:650px}
+.newsletter-topics{display:flex;flex-wrap:wrap;gap:7px;margin:18px 0 23px}
+.newsletter-topics span{font-size:9px;color:#38636a;background:#f0f8f6;border:1px solid #e0efeb;border-radius:20px;padding:6px 9px}
+.newsletter-aside{background:linear-gradient(145deg,#07384a,#0b6570);padding:30px;color:#fff;display:flex;flex-direction:column;justify-content:center}
+.newsletter-number{font:800 76px/.95 Manrope,sans-serif;letter-spacing:-5px;color:#42d7ca;margin-bottom:20px}
+.newsletter-aside strong{font:800 16px Manrope,sans-serif}
+.newsletter-aside p{color:#c1dcde}
+.newsletter-aside>a{color:#55dfd2;font-size:10px;font-weight:800;text-decoration:none;margin-top:10px}
+.newsletter-note{font-size:10px;color:#7b9094;margin:13px 2px 0}
+@media(max-width:760px){.newsletter-section{padding:58px 0}.newsletter-feature{grid-template-columns:1fr}.newsletter-copy{padding:23px}.newsletter-aside{padding:24px}.newsletter-number{font-size:60px}}
