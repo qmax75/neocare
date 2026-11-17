@@ -107,3 +107,23 @@ picture img,
 .article-card {
   background-color: #fff;
 }
+
+/* Solid-color fallbacks after removing all photographic backgrounds */
+.hero,
+.resources-section,
+.site-header,
+.site-footer {
+  background-color: #07384a !important;
+}
+.emblem-heart {
+  background-color: #0b9f9f !important;
+}
+.category-card,
+.featured-tool,
+.tool-card,
+.resource-item,
+.newsletter-feature,
+.summary-card,
+.article-card {
+  background-color: #f8fcfb !important;
+}
