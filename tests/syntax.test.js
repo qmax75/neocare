@@ -37,3 +37,17 @@ test("NeoClinical remains unavailable until its clinical tables are validated", 
   assert.match(html, /Calculadora temporalmente no disponible/);
   assert.doesNotMatch(html, /const PHOTO\s*=|function getThresholds\s*\(/);
 });
+
+test("calculator pages load the shared validation module", () => {
+  for (const file of ["calculadora-npt.html", "calculadoras-infusion.html"]) {
+    const html = fs.readFileSync(path.join(__dirname, "..", file), "utf8");
+    assert.match(html, /assets\/js\/validation\.js/);
+    assert.match(html, /NeoCareValidation/);
+  }
+});
+
+test("catalogue validates application URLs before rendering links", () => {
+  const script = fs.readFileSync(path.join(__dirname, "..", "script.js"), "utf8");
+  assert.match(script, /function safeAppUrl\(/);
+  assert.match(script, /url\.origin === window\.location\.origin/);
+});
