@@ -218,7 +218,7 @@
 
     function val(id) {
       var raw = $(id).value.trim();
-      return raw === "" ? NaN : Number(raw);
+      return window.NeoCareValidation.parseFinite(raw) ?? NaN;
     }
     function f(v, d) {
       d = (d === undefined) ? 2 : d;
@@ -238,8 +238,9 @@
       var na     = val("na");
       var inputs = { peso:peso, aporte:aporte, flujo:flujo, aa:aa, lip:lip, na:na };
       var invalid = Object.keys(inputs).filter(function (id) {
-        return !Number.isFinite(inputs[id]) ||
-          ((id === "peso" || id === "aporte") ? inputs[id] <= 0 : inputs[id] < 0);
+        return (id === "peso" || id === "aporte")
+          ? !window.NeoCareValidation.positive(String(inputs[id]))
+          : !window.NeoCareValidation.nonNegative(String(inputs[id]));
       });
       var error = $("npt-error");
       if (invalid.length) {
