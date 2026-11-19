@@ -1,0 +1,9 @@
+{
+  "name": "neocare-static",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Quality checks for the NeoCare static website",
+  "scripts": {
+    "test": "node --test"
+  }
+}
