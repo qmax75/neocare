@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0d3442">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#0d3442">
   <meta name="description" content="Calculadoras de preparación y dosificación de infusiones continuas en neonatología.">
   <title>Calculadoras de infusiones | NeoCare</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -63,11 +65,7 @@
     @media(max-width:620px){.calc-intro,.npt-intro,.clinical-intro{padding-right:0;min-height:0}.calc-intro:after,.npt-intro:after,.clinical-intro:after{position:relative;display:block;width:100%;height:92px;margin-top:16px}}
 
   </style>
-
-<style>/* Fotografía clínica NeoCare */
-.calc-intro:after{background-image:url("https://images.unsplash.com/photo-1700832082200-af7deeb63d9b?auto=format&fit=crop&w=1000&q=82");background-size:cover;background-position:center}
-@media(max-width:620px){.story{padding-top:130px;background-size:100% 116px}.card{padding-top:132px;background-size:100% 116px}}
-</style>
+ 
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -90,6 +88,7 @@
         <div class="eyebrow eyebrow-dark">CALCULADORAS CLÍNICAS</div>
         <h1>Calculadoras de infusiones</h1>
         <p>Preparación de infusiones continuas en neonatología. Ingresá peso, dosis, velocidad de flujo y volumen a preparar. Se calcula el volumen de fármaco y de diluyente necesarios.</p>
+        <p class="calc-disclaimer" role="note"><strong>En validación clínica:</strong> los rangos y concentraciones son referencias de origen externo. Confirmá dosis, presentación, unidades, compatibilidad y preparación con Farmacia y el protocolo institucional. No usar el resultado como prescripción.</p>
       </div>
 
       <div class="calc-layout">
@@ -112,6 +111,7 @@
     </div>
   </main>
 
+  <script src="assets/js/validation.js"></script>
   <script>
   (() => {
     "use strict";
@@ -160,34 +160,56 @@
         return;
       }
       if (drug.type === "electrolytes") {
-        contentEl.innerHTML = `<h2>${escapeHTML(drug.name)}</h2><div class="calc-stock"><b>Presentaciones de referencia:</b> ${escapeHTML(drug.preparation)}</div><div class="calc-form-grid"><div class="calc-field"><label>Peso del neonato (kg)</label><input type="number" step="0.01" min="0" id="elA"></div><div class="calc-field"><label>Ca requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" id="elB" value="1"></div><div class="calc-field"><label>K requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" id="elC" value="2"></div><div class="calc-field"><label>Na requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" id="elD" value="4"></div><div class="calc-field"><label>Volumen total de líquidos (ml/kg/24 h)</label><input type="number" step="1" min="0" id="elE" value="150"></div><div class="calc-field"><label>Volumen de infusión a preparar (ml)</label><input type="number" step="1" min="0" id="elF"></div></div><button class="calc-button" id="elCalc">Calcular</button><div id="elResults" class="calc-results" hidden></div>`;
+        contentEl.innerHTML = `<h2>${escapeHTML(drug.name)}</h2><div class="calc-stock"><b>Presentaciones de referencia:</b> ${escapeHTML(drug.preparation)}</div><div class="calc-form-grid"><div class="calc-field"><label for="elA">Peso del neonato (kg)</label><input type="number" step="0.01" min="0.01" required id="elA"></div><div class="calc-field"><label for="elB">Ca requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" required id="elB" value="1"></div><div class="calc-field"><label for="elC">K requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" required id="elC" value="2"></div><div class="calc-field"><label for="elD">Na requerido (mmol/kg/24 h)</label><input type="number" step="0.1" min="0" required id="elD" value="4"></div><div class="calc-field"><label for="elE">Volumen total de líquidos (ml/kg/24 h)</label><input type="number" step="1" min="0.01" required id="elE" value="150"></div><div class="calc-field"><label for="elF">Volumen de infusión a preparar (ml)</label><input type="number" step="1" min="0.01" required id="elF"></div></div><button class="calc-button" id="elCalc">Calcular</button><div id="elResults" class="calc-results" hidden></div>`;
         document.getElementById("elCalc").addEventListener("click", () => {
-          const A = parseFloat(document.getElementById("elA").value);
-          const B = parseFloat(document.getElementById("elB").value) || 0;
-          const C = parseFloat(document.getElementById("elC").value) || 0;
-          const D = parseFloat(document.getElementById("elD").value) || 0;
-          const E = parseFloat(document.getElementById("elE").value) || 0;
-          const F = parseFloat(document.getElementById("elF").value) || 0;
-          if (!A || !E || !F) { alert("Completá peso, volumen total y volumen a preparar."); return; }
+          const values = ["elA","elB","elC","elD","elE","elF"].map(id => {
+            const raw = document.getElementById(id).value.trim();
+            return window.NeoCareValidation.parseFinite(raw) ?? NaN;
+          });
+          const [A,B,C,D,E,F] = values;
+          if (!values.every(Number.isFinite) || !window.NeoCareValidation.positive(String(A)) ||
+              !window.NeoCareValidation.positive(String(E)) || !window.NeoCareValidation.positive(String(F)) ||
+              !window.NeoCareValidation.nonNegative(String(B)) || !window.NeoCareValidation.nonNegative(String(C)) ||
+              !window.NeoCareValidation.nonNegative(String(D))) {
+            alert("Ingresá valores numéricos válidos: peso, volúmenes mayores que cero y requerimientos no negativos.");
+            document.getElementById("elResults").hidden = true;
+            return;
+          }
           const caVol = A*B*(F/E)/0.228;
           const kVol = A*C*(F/E)/2;
           const naVol = A*D*(F/E);
           const dil = F - (caVol + kVol + naVol);
           const rate = (E/24)*A;
+          if (![caVol,kVol,naVol,dil,rate].every(Number.isFinite) || !window.NeoCareValidation.volumeBalance(F,[caVol,kVol,naVol])) {
+            alert("La suma de los volúmenes calculados supera el volumen final. Revisá los datos y la compatibilidad de la preparación.");
+            document.getElementById("elResults").hidden = true;
+            return;
+          }
           const box = document.getElementById("elResults");
           box.hidden = false;
           box.innerHTML = `<h3>Resultados</h3><div class="calc-result-item"><span>Gluconato de calcio 10%</span><span>${fmt(caVol)} ml</span></div><div class="calc-result-item"><span>Cloruro de potasio 15%</span><span>${fmt(kVol)} ml</span></div><div class="calc-result-item"><span>Cloruro de sodio 6%</span><span>${fmt(naVol)} ml</span></div><div class="calc-result-item"><span>Volumen de diluyente (glucosa)</span><span>${fmt(dil)} ml</span></div><div class="calc-result-item"><span>Velocidad de infusión</span><span>${fmt(rate)} ml/h</span></div>`;
         });
         return;
       }
-      contentEl.innerHTML = `<h2>${escapeHTML(drug.name)}</h2><div class="calc-stock"><b>Presentación de referencia:</b> ${escapeHTML(drug.stock)}</div><div class="calc-form-grid"><div class="calc-field"><label>Peso del neonato (kg)</label><input type="number" step="0.01" min="0" id="calcA"></div><div class="calc-field"><label>${escapeHTML(drug.doseLabel)}</label><input type="number" step="0.01" min="0" id="calcB" value="${drug.doseDefault}"></div><div class="calc-field"><label>Velocidad de flujo (ml/h)</label><input type="number" step="0.01" min="0" id="calcC" value="${drug.flowDefault}"></div><div class="calc-field"><label>Volumen de infusión a preparar (ml)</label><input type="number" step="0.01" min="0" id="calcD"></div></div><button class="calc-button" id="calcBtn">Calcular</button><div class="calc-prep">${escapeHTML(drug.preparation)}</div><div id="calcResults" class="calc-results" hidden></div>`;
+      contentEl.innerHTML = `<h2>${escapeHTML(drug.name)}</h2><div class="calc-stock"><b>Presentación de referencia:</b> ${escapeHTML(drug.stock)}</div><div class="calc-form-grid"><div class="calc-field"><label for="calcA">Peso del neonato (kg)</label><input type="number" step="0.01" min="0.01" required id="calcA"></div><div class="calc-field"><label for="calcB">${escapeHTML(drug.doseLabel)}</label><input type="number" step="0.01" min="0.0001" required id="calcB" value="${drug.doseDefault}"></div><div class="calc-field"><label for="calcC">Velocidad de flujo (ml/h)</label><input type="number" step="0.01" min="0.0001" required id="calcC" value="${drug.flowDefault}"></div><div class="calc-field"><label for="calcD">Volumen de infusión a preparar (ml)</label><input type="number" step="0.01" min="0.0001" required id="calcD"></div></div><button class="calc-button" id="calcBtn">Calcular</button><div class="calc-prep">${escapeHTML(drug.preparation)}</div><div id="calcResults" class="calc-results" hidden></div>`;
       document.getElementById("calcBtn").addEventListener("click", () => {
-        const A = parseFloat(document.getElementById("calcA").value);
-        const B = parseFloat(document.getElementById("calcB").value);
-        const C = parseFloat(document.getElementById("calcC").value);
-        const D = parseFloat(document.getElementById("calcD").value);
-        if (!A || !B || !C || !D) { alert("Completá todos los campos para calcular."); return; }
+        const values = ["calcA","calcB","calcC","calcD"].map(id => {
+          const raw = document.getElementById(id).value.trim();
+          return window.NeoCareValidation.parseFinite(raw) ?? NaN;
+        });
+        const [A,B,C,D] = values;
+        if (!values.every(Number.isFinite) || values.some(value => value <= 0)) {
+          alert("Todos los campos deben contener números finitos mayores que cero.");
+          document.getElementById("calcResults").hidden = true;
+          return;
+        }
         const r = drug.calculate(A, B, C, D);
+        if (!r || ![r.amount,r.volumeInjection,r.volumeDiluent].every(Number.isFinite) ||
+            r.amount <= 0 || r.volumeInjection <= 0 || !window.NeoCareValidation.volumeBalance(D,[r.volumeInjection]) || r.volumeDiluent < 0) {
+          alert("El resultado no es físicamente válido: el volumen de fármaco debe ser positivo y menor que el volumen final. Revisá los datos, unidades y presentación.");
+          document.getElementById("calcResults").hidden = true;
+          return;
+        }
         const box = document.getElementById("calcResults");
         box.hidden = false;
         box.innerHTML = `<h3>Resultados</h3><div class="calc-result-item"><span>Cantidad de fármaco a agregar</span><span>${fmt(r.amount)} ${r.amountUnit}</span></div><div class="calc-result-item"><span>Volumen de fármaco a agregar</span><span>${fmt(r.volumeInjection)} ml</span></div><div class="calc-result-item"><span>Volumen de diluyente</span><span>${fmt(r.volumeDiluent)} ml</span></div>`;

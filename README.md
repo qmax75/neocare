@@ -18,9 +18,9 @@ Portal web estático para centralizar aplicaciones, utilidades y recursos digita
 
 | Herramienta | Estado | Ruta |
 |---|---|---|
-| **Calculadoras de infusiones** | Disponible | `calculadoras-infusion.html` |
-| **Nutrición Parenteral (NPT)** | Disponible | `calculadora-npt.html` |
-| **NeoClinical** | Disponible | `neo-clinical.html` |
+| **Calculadoras de infusiones** | En validación | `calculadoras-infusion.html` |
+| **Nutrición Parenteral (NPT)** | En validación | `calculadora-npt.html` |
+| **NeoClinical** | Temporalmente deshabilitada | `neo-clinical.html` |
 | Resto del catálogo | En desarrollo | — |
 
 El catálogo y sus estados se administran en `apps.js`. No se deben marcar herramientas como disponibles hasta que su aplicación esté publicada y validada.
@@ -55,3 +55,12 @@ El sitio es estático. Para incorporar una herramienta nueva, agregá su ficha e
 ## Identidad visual e imágenes
 
 La interfaz utiliza ilustraciones SVG propias y livianas para representar el cuidado neonatal, las herramientas clínicas, la nutrición parenteral y la monitorización. Los recursos se encuentran en `assets/` y se reutilizan en la portada, las tarjetas destacadas, los recursos científicos y los encabezados de las aplicaciones. Se priorizan gráficos vectoriales para mantener nitidez en pantallas de alta densidad y tiempos de carga reducidos.
+
+
+## Seguridad y validación (rama security/clinical-remediation)
+
+- Las páginas estáticas incluyen una Content Security Policy en meta etiqueta y una política de referrer. GitHub Pages no permite definir libremente cabeceras HTTP; para aplicar HSTS, `X-Content-Type-Options`, `Permissions-Policy` y `frame-ancestors`, se requiere un proxy/CDN o alojamiento que permita configurar cabeceras.
+- Las calculadoras de infusión y NPT validan entradas numéricas, rechazan valores no finitos/negativos y bloquean resultados físicamente inconsistentes. Esto no valida por sí mismo dosis, fórmulas, compatibilidad, concentraciones ni protocolos clínicos.
+- La osmolaridad de NPT se identifica como estimación parcial (glucosa, aminoácidos y sodio) y no debe utilizarse por sí sola para decidir el acceso vascular.
+- NeoClinical queda temporalmente deshabilitada. La versión previa no incluía todas las curvas oficiales AAP y aproximaba edades gestacionales a curvas incompletas. Su reactivación requiere cargar y verificar las tablas oficiales completas de fototerapia y exanguinotransfusión, separar riesgo adicional de neurotoxicidad y probar el umbral de escalamiento (2 mg/dL por debajo del umbral de exanguinotransfusión).
+- Ejecutar `npm test` antes de integrar cambios. La validación clínica y farmacéutica debe realizarse por profesionales responsables y con protocolos locales.
