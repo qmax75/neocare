@@ -18,7 +18,7 @@ window.NEOCARE_APPS = [
     categoryLabel: "Calculadoras clínicas", icon: "⊕",
     description: "Preparación y dosificación de infusiones continuas en neonatología.",
     detail: "Calculadoras para preparar infusiones continuas a partir del peso, la dosis, la velocidad de flujo y el volumen final. Incluye adrenalina, diamorfina, dinoprostona (PGE2), dobutamina, dopamina, doxapram, epoprostenol, estreptoquinasa, fentanilo, heparina, insulina, isoprenalina, lidocaína, midazolam, morfina, nitroprusiato, noradrenalina, ranitidina, tolazolina y electrolitos. Cada calculadora indica la presentación de referencia y las instrucciones de preparación. Verificá siempre la fórmula, las unidades y la concentración de la presentación disponible antes de su uso clínico.",
-    status: "available", statusLabel: "Disponible", url: "calculadoras-infusion.html",
+    status: "beta", statusLabel: "En validación", url: "calculadoras-infusion.html",
     tags: ["infusión", "bomba de infusión", "dopamina", "dobutamina", "adrenalina", "noradrenalina", "morfina", "fentanilo", "midazolam", "insulina", "heparina", "prostaglandina", "dinoprostona", "nitroprusiato", "estreptoquinasa", "tolazolina", "doxapram", "isoprenalina", "lidocaína", "ranitidina", "diamorfina", "electrolitos", "preparación"],
     version: "1.0", updated: "2026-11-16",
     references: [
@@ -32,7 +32,7 @@ window.NEOCARE_APPS = [
     categoryLabel: "Nutrición neonatal", icon: "🥣",
     description: "Cálculo de macronutrientes, osmolaridad y relaciones calóricas en NPT.",
     detail: "Herramienta para el cálculo de nutrición parenteral total en neonatos. Permite ingresar peso, aporte hídrico, flujo de glucosa (GIR), aminoácidos, lípidos y sodio. Calcula automáticamente las calorías totales, la distribución de macronutrientes, la concentración de glucosa y la osmolaridad estimada, brindando alertas clínicas sobre la vía de administración (periférica vs. central) y la proporción adecuada de lípidos e hidratos de carbono.",
-    status: "available", statusLabel: "Disponible", url: "calculadora-npt.html",
+    status: "beta", statusLabel: "En validación", url: "calculadora-npt.html",
     tags: ["NPT", "nutrición parenteral", "GIR", "aminoácidos", "lípidos", "glucosa", "osmolaridad", "calorías", "macronutrientes"],
     version: "1.0", updated: "2026-11-16",
     references: [
@@ -63,9 +63,9 @@ window.NEOCARE_APPS = [
   {
     id: "neo-clinical", title: "NeoClinical", category: "clinica",
     categoryLabel: "Clínica neonatal", icon: "✚",
-    description: "Recursos de apoyo a la evaluación y toma de decisiones clínicas.",
-    detail: "Sección para herramientas clínicas, escalas y algoritmos de apoyo. Actualmente incluye la calculadora de Hiperbilirrubinemia basada en las guías de la Academia Americana de Pediatría (AAP) 2022 para el manejo de la ictericia neonatal, con umbrales de fototerapia y exanguinotransfusión. Las herramientas no sustituyen la evaluación individual ni el juicio del profesional tratante.",
-    status: "available", statusLabel: "Disponible", url: "neo-clinical.html",
+    description: "Módulo temporalmente fuera de servicio mientras se valida la implementación de los umbrales AAP 2022.",
+    detail: "La calculadora de hiperbilirrubinemia está temporalmente deshabilitada porque las tablas y la selección de curvas requieren una validación completa frente a las figuras y tablas suplementarias oficiales de la AAP 2022. No utilizar versiones previas ni resultados guardados para decisiones clínicas.",
+    status: "development", statusLabel: "En validación", url: "",
     tags: ["score", "evaluación", "sepsis", "ictericia", "bilirrubina", "fototerapia", "AAP 2022", "dolor", "ventilación", "clínica"],
     version: "1.0", updated: "2026-11-16",
     references: [
