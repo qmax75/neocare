@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0d3442">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#0d3442">
   <meta name="description" content="Calculadora de Nutrición Parenteral Total (NPT) para neonatología.">
   <title>Nutrición Parenteral (NPT) | NeoCare</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -70,11 +72,7 @@
     @media(max-width:620px){.calc-intro,.npt-intro,.clinical-intro{padding-right:0;min-height:0}.calc-intro:after,.npt-intro:after,.clinical-intro:after{position:relative;display:block;width:100%;height:92px;margin-top:16px}}
 
   </style>
-
-<style>/* Fotografía clínica NeoCare */
-.npt-intro:after{background-image:url("https://images.unsplash.com/photo-1758654859751-7dfe0c8388a3?auto=format&fit=crop&w=1400&q=82");background-size:cover;background-position:center}
-@media(max-width:620px){.story{padding-top:130px;background-size:100% 116px}.card{padding-top:132px;background-size:100% 116px}}
-</style>
+ 
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
