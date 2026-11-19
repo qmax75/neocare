@@ -14,7 +14,10 @@
   let favoritesOnly = false;
   let favorites = new Set();
 
-  try { favorites = new Set(JSON.parse(localStorage.getItem("neocare-favorites") || "[]")); } catch (_) {}
+  try {
+    const stored = JSON.parse(localStorage.getItem("neocare-favorites") || "[]");
+    favorites = new Set(Array.isArray(stored) ? stored.filter(id => apps.some(app => app.id === id)) : []);
+  } catch (_) { favorites = new Set(); }
 
   const categoryNames = {
     crecimiento: "Crecimiento neonatal",
@@ -24,12 +27,21 @@
     tecnologia: "Tecnología e IA"
   };
   const statusClass = status => status === "available" ? "status-available" : status === "beta" ? "status-beta" : "status-development";
+  function safeAppUrl(value) {
+    if (typeof value !== "string" || !value.trim() || value.startsWith("//") || value.includes("\\")) return "";
+    try {
+      const url = new URL(value, window.location.href);
+      return url.origin === window.location.origin && /^https?:$/.test(url.protocol) && !url.username && !url.password
+        ? url.pathname + url.search + url.hash : "";
+    } catch (_) { return ""; }
+  }
   const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[char]));
 
   function cardTemplate(app) {
     const isFavorite = favorites.has(app.id);
     const safeTitle = escapeHTML(app.title);
-    const hasUrl = Boolean(app.url && app.url.trim());
+    const safeUrl = safeAppUrl(app.url);
+    const hasUrl = Boolean(safeUrl);
     return `
       <article class="tool-card" data-category="${escapeHTML(app.category)}">
         <div class="card-topline"><span class="card-category">${escapeHTML(app.categoryLabel || categoryNames[app.category] || "Herramienta")}</span>
@@ -70,7 +82,8 @@
   function openApp(id) {
     const app = apps.find(item => item.id === id);
     if (!app) return;
-    const hasUrl = Boolean(app.url && app.url.trim());
+    const safeUrl = safeAppUrl(app.url);
+    const hasUrl = Boolean(safeUrl);
     const refs = (app.references || []).map(ref => `<li>${escapeHTML(ref)}</li>`).join("");
     dialogContent.innerHTML = `
       <div class="dialog-kicker">${escapeHTML(app.categoryLabel || categoryNames[app.category] || "Herramienta")}</div>
@@ -80,7 +93,7 @@
       <div class="dialog-status"><span class="status ${statusClass(app.status)}"><i></i>${escapeHTML(app.statusLabel || "En desarrollo")}</span><span>Versión: ${escapeHTML(app.version || "No especificada")}</span></div>
       ${(app.tags || []).length ? `<div class="dialog-tags">${app.tags.map(tag => `<span>${escapeHTML(tag)}</span>`).join("")}</div>` : ""}
       ${refs ? `<div class="dialog-references"><h3>Referencias y documentación</h3><ul>${refs}</ul></div>` : ""}
-      <div class="dialog-actions">${hasUrl ? `<a class="button button-primary" href="${escapeHTML(app.url)}" target="_blank" rel="noopener noreferrer">Abrir aplicación ↗</a>` : `<span class="dialog-notice">Esta herramienta todavía no tiene una aplicación publicada.</span>`}<button class="button button-outline" data-dialog-fav="${escapeHTML(app.id)}">${favorites.has(app.id) ? "★ En favoritos" : "☆ Agregar a favoritos"}</button></div>
+      <div class="dialog-actions">${hasUrl ? `<a class="button button-primary" href="${escapeHTML(safeUrl)}">Abrir aplicación ↗</a>` : `<span class="dialog-notice">Esta herramienta todavía no tiene una aplicación publicada.</span>`}<button class="button button-outline" data-dialog-fav="${escapeHTML(app.id)}">${favorites.has(app.id) ? "★ En favoritos" : "☆ Agregar a favoritos"}</button></div>
       <p class="dialog-disclaimer">Las herramientas digitales son recursos de apoyo y no reemplazan la evaluación ni el juicio clínico profesional. Verificá siempre las fuentes, unidades y resultados.</p>`;
     dialogContent.querySelector("[data-dialog-fav]").addEventListener("click", () => {
       toggleFavorite(id);
