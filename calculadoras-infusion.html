@@ -164,10 +164,13 @@
         document.getElementById("elCalc").addEventListener("click", () => {
           const values = ["elA","elB","elC","elD","elE","elF"].map(id => {
             const raw = document.getElementById(id).value.trim();
-            return raw === "" ? NaN : Number(raw);
+            return window.NeoCareValidation.parseFinite(raw) ?? NaN;
           });
           const [A,B,C,D,E,F] = values;
-          if (!values.every(Number.isFinite) || A <= 0 || E <= 0 || F <= 0 || B < 0 || C < 0 || D < 0) {
+          if (!values.every(Number.isFinite) || !window.NeoCareValidation.positive(String(A)) ||
+              !window.NeoCareValidation.positive(String(E)) || !window.NeoCareValidation.positive(String(F)) ||
+              !window.NeoCareValidation.nonNegative(String(B)) || !window.NeoCareValidation.nonNegative(String(C)) ||
+              !window.NeoCareValidation.nonNegative(String(D))) {
             alert("Ingresá valores numéricos válidos: peso, volúmenes mayores que cero y requerimientos no negativos.");
             document.getElementById("elResults").hidden = true;
             return;
@@ -177,7 +180,7 @@
           const naVol = A*D*(F/E);
           const dil = F - (caVol + kVol + naVol);
           const rate = (E/24)*A;
-          if (![caVol,kVol,naVol,dil,rate].every(Number.isFinite) || dil < 0) {
+          if (![caVol,kVol,naVol,dil,rate].every(Number.isFinite) || !window.NeoCareValidation.volumeBalance(F,[caVol,kVol,naVol])) {
             alert("La suma de los volúmenes calculados supera el volumen final. Revisá los datos y la compatibilidad de la preparación.");
             document.getElementById("elResults").hidden = true;
             return;
@@ -192,7 +195,7 @@
       document.getElementById("calcBtn").addEventListener("click", () => {
         const values = ["calcA","calcB","calcC","calcD"].map(id => {
           const raw = document.getElementById(id).value.trim();
-          return raw === "" ? NaN : Number(raw);
+          return window.NeoCareValidation.parseFinite(raw) ?? NaN;
         });
         const [A,B,C,D] = values;
         if (!values.every(Number.isFinite) || values.some(value => value <= 0)) {
@@ -202,7 +205,7 @@
         }
         const r = drug.calculate(A, B, C, D);
         if (!r || ![r.amount,r.volumeInjection,r.volumeDiluent].every(Number.isFinite) ||
-            r.amount <= 0 || r.volumeInjection <= 0 || r.volumeInjection >= D || r.volumeDiluent < 0) {
+            r.amount <= 0 || r.volumeInjection <= 0 || !window.NeoCareValidation.volumeBalance(D,[r.volumeInjection]) || r.volumeDiluent < 0) {
           alert("El resultado no es físicamente válido: el volumen de fármaco debe ser positivo y menor que el volumen final. Revisá los datos, unidades y presentación.");
           document.getElementById("calcResults").hidden = true;
           return;
