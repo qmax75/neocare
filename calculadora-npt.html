@@ -109,32 +109,32 @@
           <h2>Ingrese datos</h2>
           <div class="npt-field">
             <label for="peso">Peso</label>
-            <input id="peso" type="number" step="0.01" value="0.9">
+            <input id="peso" type="number" step="0.01" min="0.01" required value="0.9">
             <span class="unit">kg</span>
           </div>
           <div class="npt-field">
             <label for="aporte">Aporte</label>
-            <input id="aporte" type="number" step="0.1" value="60">
+            <input id="aporte" type="number" step="0.1" min="0.01" required value="60">
             <span class="unit">ml/k/día</span>
           </div>
           <div class="npt-field">
             <label for="flujo">Flujo (GIR)</label>
-            <input id="flujo" type="number" step="0.1" value="6">
+            <input id="flujo" type="number" step="0.1" min="0" required value="6">
             <span class="unit">mg/k/min</span>
           </div>
           <div class="npt-field">
             <label for="aa">Aminoácidos</label>
-            <input id="aa" type="number" step="0.1" value="3">
+            <input id="aa" type="number" step="0.1" min="0" required value="3">
             <span class="unit">gr/k/d</span>
           </div>
           <div class="npt-field">
             <label for="lip">Lípidos</label>
-            <input id="lip" type="number" step="0.1" value="2">
+            <input id="lip" type="number" step="0.1" min="0" required value="2">
             <span class="unit">gr/k/d</span>
           </div>
           <div class="npt-field">
             <label for="na">Ap Na⁺</label>
-            <input id="na" type="number" step="0.1" value="3">
+            <input id="na" type="number" step="0.1" min="0" required value="3">
             <span class="unit">mEq/k/día</span>
           </div>
           <div class="npt-legend">
@@ -321,46 +321,46 @@
       var eLip = $("w_lip");
       if (calNoProt <= 0) {
         eLip.className = "npt-note";
-        eLip.textContent = "Sin calorías no proteicas para evaluar el aporte lipídico.";
+        eLip.innerHTML = "Sin calorías no proteicas para evaluar el aporte lipídico.";
       } else if (pctLipNoProt > 40) {
         eLip.className = "npt-note bad";
-        eLip.textContent = "<strong>⚠ Lípidos " + f(pctLipNoProt, 2) +
+        eLip.innerHTML = "<strong>⚠ Lípidos " + f(pctLipNoProt, 2) +
           " % de las cal no proteicas:</strong> supera el límite recomendado del 40 %.";
       } else {
         eLip.className = "npt-note ok";
-        eLip.textContent = "<strong>✓ Lípidos " + f(pctLipNoProt, 2) +
+        eLip.innerHTML = "<strong>✓ Lípidos " + f(pctLipNoProt, 2) +
           " % de las cal no proteicas:</strong> dentro del límite (≤ 40 %).";
       }
 
       var eHC = $("w_hc");
       if (calNoProt <= 0) {
         eHC.className = "npt-note";
-        eHC.textContent = "Sin calorías no proteicas para evaluar el aporte de hidratos de carbono.";
+        eHC.innerHTML = "Sin calorías no proteicas para evaluar el aporte de hidratos de carbono.";
       } else if (pctHCNoProt < 60) {
         eHC.className = "npt-note bad";
-        eHC.textContent = "<strong>⚠ H de C " + f(pctHCNoProt, 2) +
+        eHC.innerHTML = "<strong>⚠ H de C " + f(pctHCNoProt, 2) +
           " % de las cal no proteicas:</strong> por debajo del mínimo recomendado del 60 %.";
       } else {
         eHC.className = "npt-note ok";
-        eHC.textContent = "<strong>✓ H de C " + f(pctHCNoProt, 2) +
+        eHC.innerHTML = "<strong>✓ H de C " + f(pctHCNoProt, 2) +
           " % de las cal no proteicas:</strong> cumple el mínimo (≥ 60 %).";
       }
 
       var eProt = $("w_prot");
       if (nGramos <= 0) {
         eProt.className = "npt-note";
-        eProt.textContent = "Introduzca el aporte de aminoácidos para evaluar la relación cal no prot / gr N.";
+        eProt.innerHTML = "Introduzca el aporte de aminoácidos para evaluar la relación cal no prot / gr N.";
       } else if (calNoPrGrN < 150) {
         eProt.className = "npt-note warn";
-        eProt.textContent = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
+        eProt.innerHTML = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
           ":</strong> por debajo del objetivo habitual (150 – 200).";
       } else if (calNoPrGrN > 200) {
         eProt.className = "npt-note warn";
-        eProt.textContent = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
+        eProt.innerHTML = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
           ":</strong> por encima del objetivo habitual (150 – 200).";
       } else {
         eProt.className = "npt-note ok";
-        eProt.textContent = "<strong>✓ cal no prot / gr N = " + f(calNoPrGrN, 2) +
+        eProt.innerHTML = "<strong>✓ cal no prot / gr N = " + f(calNoPrGrN, 2) +
           ":</strong> dentro del objetivo (150 – 200).";
       }
     }
