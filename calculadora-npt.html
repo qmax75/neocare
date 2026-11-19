@@ -94,7 +94,8 @@
       
       <div class="npt-intro">
         <h1>🥣 Nutrición Parenteral <span>NPT</span></h1>
-        <p>Ingrese los parámetros para calcular macronutrientes, osmolaridad y relaciones calóricas. Los resultados se actualizan automáticamente.</p>
+        <p>Ingrese los parámetros para estimar macronutrientes, osmolaridad parcial y relaciones calóricas. Los resultados se actualizan automáticamente.</p>
+        <p class="npt-note warn" role="note"><strong>En validación clínica:</strong> las fórmulas y los objetivos requieren revisión institucional. La estimación de osmolaridad no incluye todos los componentes de una NPT ni reemplaza la validación farmacéutica.</p>
       </div>
 
       <div class="npt-actions">
@@ -144,6 +145,7 @@
         <!-- RESULTADOS -->
         <section class="npt-card">
           <h2>Resultados</h2>
+          <div id="npt-error" class="npt-note bad" role="alert" hidden></div>
           <div class="npt-row hi"><span class="lbl">cal/k/día</span><span class="val" id="o_calKgDia">–</span></div>
           <div class="npt-row"><span class="lbl">cal no pr / gr prot</span><span class="val" id="o_calNoPrGrProt">–</span></div>
           <div class="npt-row"><span class="lbl">cal no pr / gr N</span><span class="val" id="o_calNoPrGrN">–</span></div>
@@ -152,7 +154,7 @@
           <div class="npt-row"><span class="lbl">% cal líp</span><span class="val" id="o_pcLip">–</span></div>
           <div class="npt-row"><span class="lbl">conc gluc</span><span class="val" id="o_concGluc">–</span></div>
           <div class="npt-row"><span class="lbl">ml/hora</span><span class="val" id="o_mlHora">–</span></div>
-          <div class="npt-row hi"><span class="lbl">osmol</span><span class="val" id="o_osmol">–</span></div>
+          <div class="npt-row hi"><span class="lbl">Osmolaridad estimada parcial</span><span class="val" id="o_osmol">–</span></div>
           <div class="npt-row"><span class="lbl">% cal lip / cal no pr</span><span class="val" id="o_pctLipNoProt">–</span></div>
           <div class="npt-row"><span class="lbl">% cal H de C / cal no pr</span><span class="val" id="o_pctHCNoProt">–</span></div>
         </section>
@@ -185,10 +187,9 @@
 
           <div class="npt-legend">
             1 gr de prot = 160 mg de N.<br>
-            Objetivo: 24 – 32 cal no prot / gr N (o 150 – 200 cal no prot / gr N).<br>
-            Las NPT con osmol > 900 mOsm/l deben infundirse por vía EV central.<br>
-            Las calorías lipídicas deben ser no más del 40 % de las calorías no proteicas.<br>
-            Las calorías por H de C deben ser no menos del 60 % de las cal no proteicas.
+            Objetivo orientativo: 150 – 200 cal no prot / gr N.<br>
+            La osmolaridad mostrada es una estimación parcial: no determina por sí sola la vía de administración.<br>
+            Las proporciones energéticas deben contrastarse con el protocolo institucional y la evaluación nutricional.
           </div>
         </section>
       </div>
@@ -199,6 +200,7 @@
     </div>
   </main>
 
+  <script src="assets/js/validation.js"></script>
   <script>
   (function () {
     "use strict";
@@ -215,10 +217,8 @@
     var $ = function (id) { return document.getElementById(id); };
 
     function val(id) {
-      var raw = $(id).value;
-      if (raw === "" || raw === null) return 0;
-      var n = parseFloat(String(raw).replace(",", "."));
-      return isFinite(n) ? n : 0;
+      var raw = $(id).value.trim();
+      return raw === "" ? NaN : Number(raw);
     }
     function f(v, d) {
       d = (d === undefined) ? 2 : d;
@@ -236,6 +236,21 @@
       var aa     = val("aa");
       var lip    = val("lip");
       var na     = val("na");
+      var inputs = { peso:peso, aporte:aporte, flujo:flujo, aa:aa, lip:lip, na:na };
+      var invalid = Object.keys(inputs).filter(function (id) {
+        return !Number.isFinite(inputs[id]) ||
+          ((id === "peso" || id === "aporte") ? inputs[id] <= 0 : inputs[id] < 0);
+      });
+      var error = $("npt-error");
+      if (invalid.length) {
+        error.hidden = false;
+        error.textContent = "Revisá los campos: peso y aporte deben ser mayores que cero; GIR, aminoácidos, lípidos y sodio deben ser números válidos no negativos. No se calcularon resultados.";
+        ["o_calKgDia","o_calNoPrGrProt","o_calNoPrGrN","o_pcHC","o_pcProt","o_pcLip","o_concGluc","o_mlHora","o_osmol","o_pctLipNoProt","o_pctHCNoProt","o_volumen","o_protDia","o_concProt","o_concGluc2","o_lipDia","o_calTotal","o_calNoProt","o_naTotal","o_concNa","o_concNaPct","o_calLip","o_pctLipNoProt2","o_calHC"].forEach(function (id) { $(id).textContent = "–"; });
+        ["w_osm","w_lip","w_hc","w_prot"].forEach(function (id) { $(id).textContent = "Sin evaluación: corregí los datos de entrada."; $(id).className = "npt-note"; });
+        return;
+      }
+      error.hidden = true;
+      error.textContent = "";
 
       var volumen = peso * aporte;                       
       var protDia = peso * aa;                           
@@ -299,62 +314,53 @@
       $("o_calHC").textContent     = f(calHC, 2) + " cal";
 
       var eOsm = $("w_osm");
-      if (volumen <= 0) {
-        eOsm.className = "npt-note";
-        eOsm.innerHTML = "Introduzca peso y aporte para calcular la osmolaridad.";
-      } else if (osmol > 900) {
-        eOsm.className = "npt-note bad";
-        eOsm.innerHTML = "<strong>⚠ Osmolaridad " + f(osmol, 0) +
-          " mOsm/l (&gt; 900):</strong> la NPT debe infundirse por vía <strong>EV central</strong>.";
-      } else {
-        eOsm.className = "npt-note ok";
-        eOsm.innerHTML = "<strong>✓ Osmolaridad " + f(osmol, 0) +
-          " mOsm/l (≤ 900):</strong> puede infundirse por vía periférica.";
-      }
+      eOsm.className = "npt-note warn";
+      eOsm.textContent = "Estimación parcial: " + f(osmol, 0) +
+        " mOsm/l. La fórmula contempla glucosa, aminoácidos y sodio; no incluye todos los componentes potenciales de una NPT. No usar este valor aislado para decidir el acceso vascular. Validar composición completa y osmolaridad con Farmacia y el protocolo institucional.";
 
       var eLip = $("w_lip");
       if (calNoProt <= 0) {
         eLip.className = "npt-note";
-        eLip.innerHTML = "Sin calorías no proteicas para evaluar el aporte lipídico.";
+        eLip.textContent = "Sin calorías no proteicas para evaluar el aporte lipídico.";
       } else if (pctLipNoProt > 40) {
         eLip.className = "npt-note bad";
-        eLip.innerHTML = "<strong>⚠ Lípidos " + f(pctLipNoProt, 2) +
+        eLip.textContent = "<strong>⚠ Lípidos " + f(pctLipNoProt, 2) +
           " % de las cal no proteicas:</strong> supera el límite recomendado del 40 %.";
       } else {
         eLip.className = "npt-note ok";
-        eLip.innerHTML = "<strong>✓ Lípidos " + f(pctLipNoProt, 2) +
+        eLip.textContent = "<strong>✓ Lípidos " + f(pctLipNoProt, 2) +
           " % de las cal no proteicas:</strong> dentro del límite (≤ 40 %).";
       }
 
       var eHC = $("w_hc");
       if (calNoProt <= 0) {
         eHC.className = "npt-note";
-        eHC.innerHTML = "Sin calorías no proteicas para evaluar el aporte de hidratos de carbono.";
+        eHC.textContent = "Sin calorías no proteicas para evaluar el aporte de hidratos de carbono.";
       } else if (pctHCNoProt < 60) {
         eHC.className = "npt-note bad";
-        eHC.innerHTML = "<strong>⚠ H de C " + f(pctHCNoProt, 2) +
+        eHC.textContent = "<strong>⚠ H de C " + f(pctHCNoProt, 2) +
           " % de las cal no proteicas:</strong> por debajo del mínimo recomendado del 60 %.";
       } else {
         eHC.className = "npt-note ok";
-        eHC.innerHTML = "<strong>✓ H de C " + f(pctHCNoProt, 2) +
+        eHC.textContent = "<strong>✓ H de C " + f(pctHCNoProt, 2) +
           " % de las cal no proteicas:</strong> cumple el mínimo (≥ 60 %).";
       }
 
       var eProt = $("w_prot");
       if (nGramos <= 0) {
         eProt.className = "npt-note";
-        eProt.innerHTML = "Introduzca el aporte de aminoácidos para evaluar la relación cal no prot / gr N.";
+        eProt.textContent = "Introduzca el aporte de aminoácidos para evaluar la relación cal no prot / gr N.";
       } else if (calNoPrGrN < 150) {
         eProt.className = "npt-note warn";
-        eProt.innerHTML = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
+        eProt.textContent = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
           ":</strong> por debajo del objetivo habitual (150 – 200).";
       } else if (calNoPrGrN > 200) {
         eProt.className = "npt-note warn";
-        eProt.innerHTML = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
+        eProt.textContent = "<strong>cal no prot / gr N = " + f(calNoPrGrN, 2) +
           ":</strong> por encima del objetivo habitual (150 – 200).";
       } else {
         eProt.className = "npt-note ok";
-        eProt.innerHTML = "<strong>✓ cal no prot / gr N = " + f(calNoPrGrN, 2) +
+        eProt.textContent = "<strong>✓ cal no prot / gr N = " + f(calNoPrGrN, 2) +
           ":</strong> dentro del objetivo (150 – 200).";
       }
     }
