@@ -100,7 +100,7 @@
             <div class="bili-field">
               <label for="bili">Bilirrubina sérica total (mg/dL)</label>
               <input id="bili" type="text" inputmode="decimal" placeholder="Ej.: 10.2 o 8.5, 10.2, 12.0">
-              <div class="bili-help">Opcional para consultar solo umbrales. Si ingresás varias mediciones, deben corresponder en orden a las edades indicadas.</div>
+              <div class="bili-help">Opcional para consultar solo umbrales. Usá punto para decimales (10.2). Si ingresás varias mediciones, deben corresponder en orden a las edades indicadas.</div>
             </div>
             <div class="bili-field">
               <label for="risk-mode">Curvas a comparar</label>
@@ -229,6 +229,7 @@
         if (bilis.some(v => v < 0 || v > 50)) throw new Error("Revisá los valores de bilirrubina (mg/dL).");
         const selectedRisks = [...form.querySelectorAll('input[name="risk"]:checked')];
         const mode = document.getElementById("risk-mode").value;
+        if (mode === "none" && selectedRisks.length) throw new Error("Marcaste factores adicionales de neurotoxicidad. Cambiá la selección a “Según factores seleccionados”, “Con factores adicionales” o “Mostrar ambas curvas”.");
         const risk = mode === "auto" ? (selectedRisks.length ? "any" : "none") : mode;
         const params = new URLSearchParams();
         params.set("ga", String(ga));
