@@ -95,3 +95,15 @@ button,select,textarea,input:not([type="checkbox"]):not([type="radio"]){min-heig
 .calc-list li button{min-height:44px}
 .bili-check,.bili-radio{min-height:44px}
 input[type="checkbox"],input[type="radio"]{width:20px;height:20px;accent-color:#078f94}
+
+/* Links útiles: recursos externos */
+.useful-links-section{background:#f3faf8}
+.useful-links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px;margin-top:28px}
+.useful-link-card{display:flex;align-items:center;gap:16px;min-height:108px;padding:20px 22px;background:#fff;border:1px solid #dcebea;border-radius:16px;color:#173f4c;text-decoration:none;box-shadow:0 8px 28px rgba(7,56,74,.045);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.useful-link-card:hover{transform:translateY(-3px);border-color:#8bd5cf;box-shadow:0 14px 34px rgba(7,56,74,.09)}
+.useful-link-icon{display:grid;place-items:center;flex:0 0 46px;width:46px;height:46px;border-radius:14px;background:#e8f5f2;color:#087f86;font-size:25px;font-weight:800}
+.useful-link-copy{display:grid;gap:6px;flex:1}
+.useful-link-copy strong{font-size:15px;color:#07384a}
+.useful-link-copy small{font-size:12px;line-height:1.5;color:#6b858b}
+.useful-link-arrow{font-size:20px;color:#078f94}
+@media(max-width:600px){.useful-link-card{padding:16px;gap:12px}.useful-link-copy strong{font-size:14px}}
