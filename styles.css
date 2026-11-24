@@ -89,3 +89,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 /* Áreas táctiles mínimas para controles compactos */
 .filter-chip,.favorite-button,.card-link,.text-button,.mobile-menu-button,.header-cta,.npt-btn,.calc-button,.bili-btn{min-height:44px}
 .filter-chip{padding-inline:14px}
+
+/* Refuerzo de accesibilidad táctil en formularios y controles clínicos */
+button,select,textarea,input:not([type="checkbox"]):not([type="radio"]){min-height:44px}
+.calc-list li button{min-height:44px}
+.bili-check,.bili-radio{min-height:44px}
+input[type="checkbox"],input[type="radio"]{width:20px;height:20px;accent-color:#078f94}
